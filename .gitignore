@@ -1,0 +1,31 @@
+# IDE Files (mostly)
+###################
+.idea/*
+!/.idea/scopes/
+!/.idea/copyright/
+*.iml
+.settings
+.project
+.classpath
+
+# Compiled source #
+###################
+.gradle/
+build/
+bin/
+out/
+/client-app/build/
+/client-app/node_modules/
+/client-app/tsconfig.tsbuildinfo
+
+# Logs #
+########
+hoistapp-logs/
+*.log
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Thumbs.db

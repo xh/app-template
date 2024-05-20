@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": [
+      "dom",
+      "es2022"
+    ],
+    "jsx": "react",
+    "moduleResolution": "Node",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "noImplicitOverride": true,
+    "resolveJsonModule": true,
+    "useDefineForClassFields": true
+  },
+  "references": [
+    {
+      "path": "./node_modules/@xh/hoist"
+    }
+  ],
+  "include": [
+    "src"
+  ]
+}
