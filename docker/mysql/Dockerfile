@@ -1,0 +1,6 @@
+FROM mysql:latest
+ENV MYSQL_ROOT_PASSWORD=hoist-app
+ENV MYSQL_DATABASE=hoist-app
+ENV MYSQL_USER=hoist-user
+ENV MYSQL_PASSWORD=hoist-app
+EXPOSE 3306
