@@ -7,6 +7,8 @@ module.exports = (env = {}) => {
         appVersion: '1.0-SNAPSHOT',
         favicon: './public/favicon.svg',
         devServerOpenPage: 'app/',
+        dupePackageCheckExcludes: ['es-abstract', 'tslib'],
+        reactProdMode: false,
         ...env
     });
 };
