@@ -36,7 +36,11 @@ class Auth0Service extends BaseService {
     TokenValidationResult validateToken(String token) {
         try {
             if (config.disabled) throw new RuntimeException('Unable to validate JWT - OAuth disabled via InstanceConfig.')
-            if (!token) throw new RuntimeException('Unable to validate JWT - no token provided.')
+            if (!token) {
+                logTrace('Unable to validate - no token provided')
+                return null
+            }
+
 
             logTrace('Validating token', token)
 
