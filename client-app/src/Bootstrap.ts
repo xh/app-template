@@ -11,13 +11,10 @@
 //-----------------------------------------------------------------
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {XH} from '@xh/hoist/core';
-import {AuthService} from './core/svc/AuthService';
 
 declare module '@xh/hoist/core' {
     // Merge interface with XHApi class to include injected services.
-    export interface XHApi {
-        authService: AuthService;
-    }
+    export interface XHApi {}
 
     // Merge interface with HoistUser class to include additional app-specific user properties.
     export interface HoistUser {

@@ -1,26 +1,20 @@
 import {div} from '@xh/hoist/cmp/layout';
 import {TabContainerModel} from '@xh/hoist/cmp/tab';
-import {HoistAppModel, managed, XH} from '@xh/hoist/core';
+import {HoistAppModel, managed} from '@xh/hoist/core';
 import {
     autoRefreshAppOption,
     sizingModeAppOption,
     themeAppOption
 } from '@xh/hoist/desktop/cmp/appOption';
 import {Icon} from '@xh/hoist/icon';
-import {AuthService} from '../core/svc/AuthService';
 
 export class AppModel extends HoistAppModel {
     static instance: AppModel;
 
     @managed tabModel: TabContainerModel;
 
-    static override async preAuthAsync() {
-        await XH.installServicesAsync(AuthService);
-    }
-
     override async initAsync() {
         await super.initAsync();
-
         this.tabModel = new TabContainerModel({
             route: 'default',
             track: true,
@@ -37,10 +31,6 @@ export class AppModel extends HoistAppModel {
                 }
             ]
         });
-    }
-
-    override async logoutAsync() {
-        return XH.authService.logoutAsync();
     }
 
     override getAppOptions() {

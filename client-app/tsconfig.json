@@ -12,9 +12,9 @@
     "skipLibCheck": true,
     "target": "ES2022",
     "useDefineForClassFields": true,
-
+    "baseUrl": "./src",
     "paths": {
-      "@xh/hoist/*": ["../../hoist-react/*"]
+      "@/*": ["./*"]
     }
   },
   "references": [
