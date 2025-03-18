@@ -33,6 +33,7 @@ class AppUser implements HoistUser {
 
     static mapping = {
         cache true
+        table 'hoist_user'
         password column: '`password`'
     }
 

@@ -47,19 +47,29 @@ class BootStrap implements LogSupport {
     }
 
     private void ensureRequiredConfigsCreated() {
-        configService.ensureRequiredConfigsCreated([
-                auth0Config: [
-                        valueType: 'json',
-                        defaultValue: [
-                                clientId: 'YOUR_CLIENT_ID',
-                                audience: 'YOUR_AUDIENCE',
-                                domain: 'YOUR_DOMAIN'
-                        ],
-                        clientVisible: false,
-                        groupName: 'Security',
-                        note: 'Stub config for example Auth0-based OAuth implementation. Replace with your own values, or remove if not planning to use Auth0.',
-                ]
-        ])
+        String auth0ClientId = getInstanceConfig('auth0ClientId')
+        String auth0Domain = getInstanceConfig('auth0Domain')
+        String auth0Audience = getInstanceConfig('auth0Audience')
+
+        Map<String, Map> config = new HashMap<>();
+
+        if (auth0ClientId && auth0Domain && auth0Audience) {
+            config.put("auth0Config", [
+                    auth0Config: [
+                            valueType: 'json',
+                            defaultValue: [
+                                    clientId: auth0ClientId,
+                                    domain: auth0Domain
+                            ],
+                            audience: auth0Audience,
+                            clientVisible: false,
+                            groupName: 'Auth',
+                            note: '@TODO.'
+                    ]
+            ]);
+        }
+
+        configService.ensureRequiredConfigsCreated(config)
     }
 
     private void ensureRequiredPrefsCreated() {
