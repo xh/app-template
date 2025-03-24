@@ -29,3 +29,10 @@ hoistapp-logs/
 .DS_Store?
 ehthumbs.db
 Thumbs.db
+
+#User environment file(s)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
