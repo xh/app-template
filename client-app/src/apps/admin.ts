@@ -1,8 +1,10 @@
-import '../Bootstrap';
 import {AppComponent} from '@xh/hoist/admin/AppComponent';
 import {XH} from '@xh/hoist/core';
 import {AppContainer} from '@xh/hoist/desktop/appcontainer';
-import {AppModel} from '../admin/AppModel';
+import {AppModel} from '@/admin/AppModel';
+import {AuthModel} from '@/core/AuthModel';
+
+import '@/Bootstrap';
 
 XH.renderApp({
     clientAppCode: 'admin',
@@ -10,6 +12,7 @@ XH.renderApp({
     componentClass: AppComponent,
     modelClass: AppModel,
     containerClass: AppContainer,
+    authModelClass: AuthModel,
     isMobileApp: false,
     enableLogout: true,
     webSocketsEnabled: true,

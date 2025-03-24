@@ -1,9 +1,10 @@
-import '../Bootstrap';
 import {XH} from '@xh/hoist/core';
 import {AppContainer} from '@xh/hoist/desktop/appcontainer';
 import {AppComponent} from '@/desktop/AppComponent';
 import {AppModel} from '@/desktop/AppModel';
 import {AuthModel} from '@/core/AuthModel';
+
+import '@/Bootstrap';
 
 XH.renderApp({
     clientAppCode: 'app',
