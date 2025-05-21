@@ -42,25 +42,17 @@ springBoot {
     mainClass = xhAppPackage + ".Application"
 }
 
-if (parseBoolean(runHoistInline)) {
-    println "${xhAppName}: running with Hoist Core INLINE...."
-    grails.plugins {
-        implementation project(":hoist-core")
-    }
-} else {
-    println "${xhAppName}: running with Hoist Core PACKAGED at v${hoistCoreVersion}...."
-    dependencies {
-        implementation "io.xh:hoist-core:$hoistCoreVersion"
-    }
-}
-
 dependencies {
-    // For server-side JWT validation.
+    // Hoist Core
+    implementation "io.xh:hoist-core:$hoistCoreVersion"
+
+    // Server-side JWT validation in `AuthZeroTokenService`
     implementation "org.bitbucket.b_c:jose4j:0.9.6"
 
-    // Database drivers - H2 for temporary in-memory DB with `useH2: true` in instanceConfig YAML
-    // MySQL for deployed instances, or more stateful local workstation setups.
+    // Database drivers - H2 for temporary in-memory DB with `USE_H2=true` in .env,
     runtimeOnly "com.h2database:h2:2.2.224"
+    // MySQL would be one suitable option for deployed instances or more stateful local workstation setups.
+    // Any database supported by GORM should work, including Postgres, SQL Server, etc.
     runtimeOnly "mysql:mysql-connector-java:8.0.33"
 
     // For hot reloading
@@ -94,8 +86,6 @@ def allJvmArgs = [
     "--add-opens=jdk.management/com.sun.management.internal=ALL-UNNAMED",
     "--add-opens=java.base/java.util=ALL-UNNAMED"
 ]
-
-
 
 if (parseBoolean(enableHotSwap)) {
     def groovyReset = configurations.developmentOnly.resolve().find {it.name.contains("groovyReset")}
