@@ -22,14 +22,13 @@ few default configurations that would *not* be suitable for running in productio
   password. You will quickly want to connect to the OAuth provider (or other authentication scheme)
   of your choice and remove both the bootstrap routine and support for user passwords.
 
-* Only the client-side dependencies for AG Grid Community Edition (https://www.ag-grid.com/) are
-  included, but a license for AG Grid Enterprise is strongly recommended and required to use all
-  of the available Grid integrations and Admin Console features. Once you have a license, add the
-  missing dependencies (see the Toolbox `package.json`) and configure in your license via the
-  bootstrapped `jsLicenses` app config (or modify `Bootstrap.ts` and check your license in with
-  the code to a private repo, if you prefer).
+* AG Grid Community Edition (https://www.ag-grid.com/) is added as a client-side dependency, but
+  the licensed AG Grid Enterprise is strongly recommended and required to use all of the available
+  Grid features. Once you have a license, add the missing dependencies (see the Toolbox
+  `package.json`) and configure in your license via the bootstrapped `jsLicenses` app config (or
+  modify `Bootstrap.ts` and include the license with the code, if you have a private repo).
 
-## Running the Template
+## Development Environment Setup
 
 The only local prerequisites for running this template are:
 
@@ -47,6 +46,8 @@ The only local prerequisites for running this template are:
     * Install Node from [nodejs.org](https://nodejs.org/en/download/) or via a package manager.
     * Install Yarn via `npm install -g yarn` or via a package manager.
     * Validate by running `node -v` and `yarn -v` in a terminal.
+
+## Running the Template
 
 Once you have installed the above and cloned the repo, `cd` into the project directory and run:
 
