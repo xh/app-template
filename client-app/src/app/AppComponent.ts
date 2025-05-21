@@ -16,14 +16,6 @@ export const AppComponent = hoistCmp({
                 icon: Icon.rocket({size: '2x', className: 'xh-orange'}),
                 leftItems: [tabSwitcher({enableOverflow: true})]
             }),
-            hotkeys: [
-                {
-                    label: 'Switch to the home tab',
-                    combo: 'shift + h',
-                    global: true,
-                    onKeyDown: () => model.goHome()
-                }
-            ],
             item: tabContainer(),
             mask: 'onLoad'
         });

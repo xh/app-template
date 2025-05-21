@@ -1,4 +1,4 @@
-import {placeholder} from '@xh/hoist/cmp/layout';
+import {a, p, placeholder} from '@xh/hoist/cmp/layout';
 import {TabContainerModel} from '@xh/hoist/cmp/tab';
 import {HoistAppModel, LoadSpec, XH} from '@xh/hoist/core';
 import {
@@ -7,6 +7,7 @@ import {
     themeAppOption
 } from '@xh/hoist/desktop/cmp/appOption';
 import {Icon} from '@xh/hoist/icon';
+import {workTab} from './work/WorkTab';
 
 export class AppModel extends HoistAppModel {
     static instance: AppModel;
@@ -24,12 +25,17 @@ export class AppModel extends HoistAppModel {
                 {
                     id: 'home',
                     icon: Icon.home(),
-                    content: () => placeholder(Icon.home(), 'Welcome home!')
+                    content: () =>
+                        placeholder(
+                            Icon.home(),
+                            p('Welcome home!'),
+                            a({item: 'Now go to work...', onClick: () => this.goToWork()})
+                        )
                 },
                 {
                     id: 'work',
                     icon: Icon.portfolio(),
-                    content: () => placeholder(Icon.portfolio(), 'Time to do some work!')
+                    content: workTab
                 }
             ]
         });
@@ -63,7 +69,7 @@ export class AppModel extends HoistAppModel {
         return [themeAppOption(), sizingModeAppOption(), autoRefreshAppOption()];
     }
 
-    goHome() {
-        this.tabModel.activateTab('home');
+    goToWork() {
+        this.tabModel.activateTab('work');
     }
 }
