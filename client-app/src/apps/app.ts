@@ -1,14 +1,16 @@
 import '../Bootstrap';
 import {XH} from '@xh/hoist/core';
 import {AppContainer} from '@xh/hoist/desktop/appcontainer';
-import {AppComponent} from '../desktop/AppComponent';
-import {AppModel} from '../desktop/AppModel';
+import {AppComponent} from '../app/AppComponent';
+import {AppModel} from '../app/AppModel';
+import {AuthModel} from '../core/security/AuthModel';
 
 XH.renderApp({
     clientAppCode: 'app',
     clientAppName: 'Hoist App',
-    componentClass: AppComponent,
     modelClass: AppModel,
+    componentClass: AppComponent,
+    authModelClass: AuthModel,
     containerClass: AppContainer,
     isMobileApp: false,
     enableLogout: true,

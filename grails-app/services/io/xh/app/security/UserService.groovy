@@ -1,22 +1,21 @@
-package io.xh.app.user
+package io.xh.app.security
 
 import grails.gorm.transactions.ReadOnly
 import grails.gorm.transactions.Transactional
-import io.xh.app.security.TokenValidationResult
 import io.xh.hoist.user.BaseUserService
 
 class UserService extends BaseUserService {
 
     @Override
     @ReadOnly
-    List<AppUser> list(boolean activeOnly) {
-        return activeOnly ? AppUser.findAllByEnabled(true) : AppUser.list()
+    List<User> list(boolean activeOnly) {
+        return activeOnly ? User.findAllByEnabled(true) : User.list()
     }
 
     @Override
     @ReadOnly
-    AppUser find(String username) {
-        return AppUser.findByEmail(username)
+    User find(String username) {
+        return User.findByEmail(username)
     }
 
     /**
@@ -24,14 +23,14 @@ class UserService extends BaseUserService {
      * Your app's approach to user management may (and almost certainly will) vary.
      */
     @Transactional
-    AppUser getOrCreateFromTokenResult(TokenValidationResult tokenResult) {
+    User getOrCreateFromTokenResult(TokenValidationResult tokenResult) {
         def email = tokenResult.email,
             name = tokenResult.name,
             profilePicUrl = tokenResult.picture,
-            user = AppUser.findByEmail(email)
+            user = User.findByEmail(email)
 
         if (!user) {
-            user = new AppUser(
+            user = new User(
                 email: email,
                 name: name,
                 profilePicUrl: profilePicUrl

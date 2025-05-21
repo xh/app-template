@@ -1,6 +1,5 @@
 package io.xh.app
 
-
 import io.xh.hoist.monitor.provided.DefaultMonitorDefinitionService
 
 /**
@@ -12,5 +11,11 @@ import io.xh.hoist.monitor.provided.DefaultMonitorDefinitionService
  *  }
  */
 class MonitorDefinitionService extends DefaultMonitorDefinitionService {
+
+    @Override
+    void init() {
+        super.init()
+        ensureRequiredMonitorsCreated([])
+    }
 
 }

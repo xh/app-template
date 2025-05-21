@@ -1,22 +1,17 @@
-import {div} from '@xh/hoist/cmp/layout';
+import {placeholder} from '@xh/hoist/cmp/layout';
 import {TabContainerModel} from '@xh/hoist/cmp/tab';
-import {HoistAppModel, managed, XH} from '@xh/hoist/core';
+import {HoistAppModel, LoadSpec, XH} from '@xh/hoist/core';
 import {
     autoRefreshAppOption,
     sizingModeAppOption,
     themeAppOption
 } from '@xh/hoist/desktop/cmp/appOption';
 import {Icon} from '@xh/hoist/icon';
-import {AuthService} from '../core/svc/AuthService';
 
 export class AppModel extends HoistAppModel {
     static instance: AppModel;
 
-    @managed tabModel: TabContainerModel;
-
-    static override async preAuthAsync() {
-        await XH.installServicesAsync(AuthService);
-    }
+    tabModel: TabContainerModel;
 
     override async initAsync() {
         await super.initAsync();
@@ -29,22 +24,26 @@ export class AppModel extends HoistAppModel {
                 {
                     id: 'home',
                     icon: Icon.home(),
-                    content: () =>
-                        div({
-                            item: 'Welcome home!',
-                            className: 'xh-pad'
-                        })
+                    content: () => placeholder(Icon.home(), 'Welcome home!')
+                },
+                {
+                    id: 'work',
+                    icon: Icon.portfolio(),
+                    content: () => placeholder(Icon.portfolio(), 'Time to do some work!')
                 }
             ]
         });
+
+        await this.loadAsync();
     }
 
-    override async logoutAsync() {
-        return XH.authService.logoutAsync();
-    }
+    override async doLoadAsync(loadSpec: LoadSpec) {
+        const {greeting} = await XH.fetchJson({
+            url: 'helloWorld',
+            loadSpec
+        });
 
-    override getAppOptions() {
-        return [themeAppOption(), sizingModeAppOption(), autoRefreshAppOption()];
+        XH.successToast(`👋 ${greeting}`);
     }
 
     override getRoutes() {
@@ -53,13 +52,15 @@ export class AppModel extends HoistAppModel {
                 name: 'default',
                 path: '/app',
                 children: [
-                    {
-                        name: 'home',
-                        path: '/home'
-                    }
+                    {name: 'home', path: '/home'},
+                    {name: 'work', path: '/work'}
                 ]
             }
         ];
+    }
+
+    override getAppOptions() {
+        return [themeAppOption(), sizingModeAppOption(), autoRefreshAppOption()];
     }
 
     goHome() {

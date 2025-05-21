@@ -1,4 +1,4 @@
-package io.xh.app.user
+package io.xh.app.security
 
 import io.xh.hoist.role.provided.DefaultRoleService
 

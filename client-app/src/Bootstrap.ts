@@ -9,23 +9,16 @@
 //-----------------------------------------------------------------
 // App Services -- Import and Register
 //-----------------------------------------------------------------
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {XH} from '@xh/hoist/core';
-import {AuthService} from './core/svc/AuthService';
-
 declare module '@xh/hoist/core' {
     // Merge interface with XHApi class to include injected services.
     export interface XHApi {
-        authService: AuthService;
+        // someAppService: SomeAppService;
     }
 
     // Merge interface with HoistUser class to include additional app-specific user properties.
     export interface HoistUser {
-        profilePicUrl: string;
+        // someCustomUserProperty: string;
     }
-
-    // @ts-ignore - Help IntelliJ recognize uses of injected service methods on the `XH` singleton.
-    export const XH: XHApi;
 }
 
 //-----------------------------------------------------------------
@@ -73,5 +66,4 @@ highchartsHeatmap(Highcharts);
 highchartsOfflineExporting(Highcharts);
 highchartsTree(Highcharts);
 highchartsTreeGraph(Highcharts);
-
 installHighcharts(Highcharts);

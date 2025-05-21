@@ -1,17 +1,14 @@
 import '../Bootstrap';
 import {AppComponent} from '@xh/hoist/admin/AppComponent';
+import {AppModel} from '@xh/hoist/admin/AppModel';
 import {XH} from '@xh/hoist/core';
 import {AppContainer} from '@xh/hoist/desktop/appcontainer';
-import {AppModel} from '../admin/AppModel';
+import {AuthModel} from '../core/security/AuthModel';
 
-XH.renderApp({
-    clientAppCode: 'admin',
-    clientAppName: 'Hoist App Admin',
-    componentClass: AppComponent,
+XH.renderAdminApp({
     modelClass: AppModel,
+    componentClass: AppComponent,
+    authModelClass: AuthModel,
     containerClass: AppContainer,
-    isMobileApp: false,
-    enableLogout: true,
-    webSocketsEnabled: true,
-    checkAccess: 'HOIST_ADMIN_READER'
+    enableLogout: true
 });

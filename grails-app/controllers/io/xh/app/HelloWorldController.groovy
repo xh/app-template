@@ -7,7 +7,7 @@ import io.xh.hoist.security.AccessAll
 class HelloWorldController extends BaseController {
 
     def index() {
-        renderJSON(hello: "world")
+        renderJSON(greeting: "It's nice to see you, ${user.displayName}!")
     }
 
 }

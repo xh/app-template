@@ -1,5 +1,4 @@
 # IDE Files (mostly)
-###################
 .idea/*
 !/.idea/scopes/
 !/.idea/copyright/
@@ -8,23 +7,23 @@
 .project
 .classpath
 
-# Compiled source #
-###################
+# Local env w/secrets
+.env
+
+# Compiled source
 .gradle/
 build/
 bin/
 out/
+node_modules/
 /client-app/build/
-/client-app/node_modules/
 /client-app/tsconfig.tsbuildinfo
 
-# Logs #
-########
+# Logs
 hoistapp-logs/
 *.log
 
-# OS generated files #
-######################
+# OS generated files
 .DS_Store
 .DS_Store?
 ehthumbs.db

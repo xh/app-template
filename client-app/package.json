@@ -6,25 +6,22 @@
   "scripts": {
     "build": "webpack --env prodBuild",
     "buildAndAnalyze": "webpack --env prodBuild --env analyzeBundles",
-    "hoistVer": "cat node_modules/@xh/hoist/package.json | grep version",
     "lint": "yarn lint:all",
-    "lint:all": "yarn lint:js && yarn lint:styles",
-    "lint:js": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "lint:all": "yarn lint:code && yarn lint:styles",
+    "lint:code": "eslint .",
     "lint:styles": "stylelint \"**/*.s?(a|c)ss\"",
+    "prepare": "cd .. && husky client-app/.husky",
     "start": "yarn install && cross-env NODE_OPTIONS=--max_old_space_size=3072 webpack-dev-server",
-    "startOnDevice": "yarn install && webpack-dev-server --env inlineHoist --env devHost=$(ipconfig getifaddr en0)",
-    "startAndAnalyze": "yarn install && webpack-dev-server --env analyzeBundles",
-    "startWithHoist": "cd ../../hoist-react && yarn install && cd ../toolbox/client-app && yarn install && cross-env NODE_OPTIONS=--max_old_space_size=3072 webpack-dev-server --env inlineHoist",
-    "prepare": "cd .. && husky client-app/.husky"
+    "startAndAnalyze": "yarn start --env analyzeBundles"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint",
-      "prettier --write"
+      "prettier --write",
+      "eslint"
     ],
     "*.s?(a|c)ss": [
-      "stylelint",
-      "prettier --write"
+      "prettier --write",
+      "stylelint"
     ]
   },
   "dependencies": {
@@ -32,7 +29,8 @@
     "@ag-grid-community/core": "~31.2.0",
     "@ag-grid-community/react": "~31.2.0",
     "@ag-grid-community/styles": "~31.2.0",
-    "@xh/hoist": "~64.0.1",
+    "@types/react": "18.x",
+    "@xh/hoist": "~73.0.1",
     "core-js": "3.x",
     "highcharts": "11.x",
     "lodash": "4.x",
@@ -41,19 +39,22 @@
     "react-dom": "~18.2.0"
   },
   "devDependencies": {
-    "@xh/hoist-dev-utils": "^8.x",
+    "@xh/hoist-dev-utils": "11.x",
     "cross-env": "7.x",
-    "eslint": "8.x",
-    "eslint-config-prettier": "9.x",
+    "eslint": "9.x",
+    "eslint-config-prettier": "10.x",
     "husky": "9.x",
     "lint-staged": "15.x",
     "postcss": "8.x",
     "prettier": "3.x",
     "stylelint": "16.x",
-    "stylelint-config-standard-scss": "13.x",
-    "typescript": "~5.1.6"
+    "stylelint-config-standard-scss": "15.x",
+    "typescript": "^5.8.3"
   },
   "resolutions": {
-    "core-js": "3.x"
-  }
+    "core-js": "3.x",
+    "@types/react": "18.x",
+    "@types/react-dom": "18.x"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

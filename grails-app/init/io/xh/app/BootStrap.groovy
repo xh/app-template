@@ -1,7 +1,8 @@
 package io.xh.app
 
 import grails.gorm.transactions.Transactional
-import io.xh.app.user.AppUser
+import io.xh.app.security.RoleService
+import io.xh.app.security.User
 import io.xh.hoist.config.ConfigService
 import io.xh.hoist.log.LogSupport
 import io.xh.hoist.pref.PrefService
@@ -14,13 +15,16 @@ class BootStrap implements LogSupport {
 
     ConfigService configService
     PrefService prefService
+    RoleService roleService
 
-    def init = {servletContext ->
+    def init = { servletContext ->
         logStartupMsg()
 
         ensureRequiredConfigsCreated()
         ensureRequiredPrefsCreated()
-        ensureBootstrapAdminCreated()
+        ensureRequiredRolesCreated()
+
+        createLocalAdminUserIfNeeded()
 
         def services = xhServices.findAll {
             it.class.canonicalName.startsWith(this.class.package.name)
@@ -49,32 +53,62 @@ class BootStrap implements LogSupport {
     private void ensureRequiredConfigsCreated() {
         configService.ensureRequiredConfigsCreated([
                 auth0Config: [
-                        valueType: 'json',
-                        defaultValue: [
-                                clientId: 'YOUR_CLIENT_ID',
-                                audience: 'YOUR_AUDIENCE',
-                                domain: 'YOUR_DOMAIN'
+                        groupName    : 'Security',
+                        valueType    : 'json',
+                        defaultValue : [
+                                clientId             : 'YOUR_CLIENT_ID',
+                                audience             : 'YOUR_AUDIENCE',
+                                domain               : 'YOUR_DOMAIN',
+                                authZeroClientOptions: [useCookiesForTransactions: false],
+                                reloginEnabled       : true
                         ],
                         clientVisible: false,
-                        groupName: 'Security',
-                        note: 'Stub config for example Auth0-based OAuth implementation. Replace with your own values, or remove if not planning to use Auth0.',
+                        note         : 'Stub config for example Auth0-based OAuth implementation. Replace with your own values, or remove if not planning to use Auth0.',
+                ],
+                jsLicenses : [
+                        groupName    : 'Technical',
+                        valueType    : 'json',
+                        defaultValue : [agGrid: null],
+                        clientVisible: true
                 ]
         ])
     }
 
     private void ensureRequiredPrefsCreated() {
-        prefService.ensureRequiredPrefsCreated([:])
+        prefService.ensureRequiredPrefsCreated(
+                [:]
+//                [
+//                        somePref: [
+//                                groupName    : 'App',
+//                                type         : 'json',
+//                                defaultValue : [useFooBar: true],
+//                                clientVisible: true,
+//                                note         : 'Example pref for storing some JSON data.'
+//                        ]
+//                ]
+
+        )
+    }
+
+    private void ensureRequiredRolesCreated() {
+        roleService.ensureRequiredRolesCreated([
+//                [
+//                        category: 'App',
+//                        name    : 'SOME_APP_ROLE',
+//                        roles   : ['HOIST_ADMIN']
+//                ]
+        ])
     }
 
     @Transactional
-    private void ensureBootstrapAdminCreated() {
+    private void createLocalAdminUserIfNeeded() {
         String adminUsername = getInstanceConfig('bootstrapAdminUser')
         String adminPassword = getInstanceConfig('bootstrapAdminPassword')
 
         if (adminUsername && adminPassword) {
-            def user = AppUser.findByEmail(adminUsername)
+            def user = User.findByEmail(adminUsername)
             if (!user) {
-                new AppUser(
+                new User(
                         email: adminUsername,
                         password: adminPassword,
                         name: 'Bootstrap Admin',
@@ -86,8 +120,6 @@ class BootStrap implements LogSupport {
             }
 
             logInfo("Local admin user available as per instanceConfig", adminUsername)
-        } else {
-            logWarn("Default admin user not created. To provide admin access, specify credentials via instance config.")
         }
     }
 }

@@ -1,10 +1,10 @@
-package io.xh.app.user
+package io.xh.app.security
 
 import io.xh.hoist.user.HoistUser
 import org.jasypt.util.password.BasicPasswordEncryptor
 
 
-class AppUser implements HoistUser {
+class User implements HoistUser {
 
     private static encryptor = new BasicPasswordEncryptor()
 
@@ -33,6 +33,8 @@ class AppUser implements HoistUser {
 
     static mapping = {
         cache true
+        table 'app_user'
+        email index: 'idx_app_user_email'
         password column: '`password`'
     }
 

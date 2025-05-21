@@ -13,7 +13,7 @@ export const AppComponent = hoistCmp({
     render({model}) {
         return panel({
             tbar: appBar({
-                icon: Icon.rocket({size: '2x'}),
+                icon: Icon.rocket({size: '2x', className: 'xh-orange'}),
                 leftItems: [tabSwitcher({enableOverflow: true})]
             }),
             hotkeys: [
