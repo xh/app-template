@@ -16,7 +16,7 @@ export const AppComponent = hoistCmp({
                 icon: Icon.rocket({size: '2x', className: 'xh-orange'}),
                 leftItems: [tabSwitcher({enableOverflow: true})]
             }),
-            item: tabContainer(),
+            item: tabContainer({switcher: false}),
             mask: 'onLoad'
         });
     }
