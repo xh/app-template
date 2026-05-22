@@ -2183,10 +2183,10 @@
     webpack-dev-server "~5.2.0"
     webpackbar "~7.0.0"
 
-"@xh/hoist@~82.0.0":
-  version "82.0.4"
-  resolved "https://registry.yarnpkg.com/@xh/hoist/-/hoist-82.0.4.tgz#9f48f2753fdf27f6c791b1032e3971f5c845c936"
-  integrity sha512-ImUHPZ51s6OZh9odbD3sOWu0xhzC7YPGAvhoPvO6VKPd6y5woW4blEDXFs8YlYgPnzbehKUVJfWF6J3KJq6s2w==
+"@xh/hoist@~83.0.0":
+  version "83.0.2"
+  resolved "https://registry.yarnpkg.com/@xh/hoist/-/hoist-83.0.2.tgz#0ae223ab781efaa69ab1fad8b3ef5b7d8553a533"
+  integrity sha512-7gj5Adjv6CWcDlQ31F7dJi9A7i28rl2KQfpk7htcc3JYxNK8kwbCqqUF7gM9CE8Qo+3b8SaffZvtCqcrREDcLA==
   dependencies:
     "@auth0/auth0-spa-js" "~2.17.0"
     "@azure/msal-browser" "~4.29.0"
@@ -2206,10 +2206,10 @@
     classnames "~2.5.1"
     clipboard-copy "~4.0.1"
     codemirror "~5.65.0"
+    commander "^14.0.3"
     core-js "3.x"
     debounce-promise "~3.1.0"
     dompurify "~3.3.0"
-    downloadjs "~1.4.7"
     fast-deep-equal "~3.1.1"
     filesize "~11.0.2"
     golden-layout "~1.5.9"
@@ -3041,6 +3041,11 @@ commander@^13.1.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-13.1.0.tgz#776167db68c78f38dcce1f9b8d7b8b9a488abf46"
   integrity sha512-/rFeCpNJQbhSZjGVwO9RFV3xPqbnERS8MmIQzCtD/zl6gpJuV/bMLuN92oG3F7d8oDEHHRrujSXNUr8fpjntKw==
 
+commander@^14.0.3:
+  version "14.0.3"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-14.0.3.tgz#425d79b48f9af82fcd9e4fc1ea8af6c5ec07bbc2"
+  integrity sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==
+
 commander@^2.20.0:
   version "2.20.3"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
@@ -3542,11 +3547,6 @@ dot-case@^3.0.4:
   dependencies:
     no-case "^3.0.4"
     tslib "^2.0.3"
-
-downloadjs@~1.4.7:
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/downloadjs/-/downloadjs-1.4.7.tgz#f69f96f940e0d0553dac291139865a3cd0101e3c"
-  integrity sha512-LN1gO7+u9xjU5oEScGFKvXhYf7Y/empUIIEAGBs1LzUq/rg5duiDrkuH5A2lQGd5jfMOb9X9usDa2oVXwJ0U/Q==
 
 dpop@2.1.1:
   version "2.1.1"
