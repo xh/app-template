@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@types/react": "18.x",
-    "@xh/hoist": "~83.0.0",
+    "@xh/hoist": "~84.0.0",
     "ag-grid-community": "~34.0.0",
     "ag-grid-react": "~34.0.0",
     "core-js": "3.x",
