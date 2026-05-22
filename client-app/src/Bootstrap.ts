@@ -23,22 +23,65 @@ declare module '@xh/hoist/core' {
 
 //-----------------------------------------------------------------
 // AG Grid Registration
-// You must provide and install a suitable Enterprise license if importing and activating any enterprise features.
+// You must provide and install a suitable Enterprise license if importing and activating any
+// enterprise features.
 //-----------------------------------------------------------------
 import {installAgGrid} from '@xh/hoist/kit/ag-grid';
-import {ModuleRegistry} from '@ag-grid-community/core';
-import '@ag-grid-community/styles/ag-grid.css';
-import '@ag-grid-community/styles/ag-theme-balham.css';
-import {AgGridReact} from '@ag-grid-community/react';
-import {ClientSideRowModelModule} from '@ag-grid-community/client-side-row-model';
+import {
+    CellStyleModule,
+    ClientSideRowModelApiModule,
+    ClientSideRowModelModule,
+    ColumnApiModule,
+    CustomEditorModule,
+    ModuleRegistry,
+    PinnedRowModule,
+    provideGlobalGridOptions,
+    RenderApiModule,
+    RowApiModule,
+    RowAutoHeightModule,
+    RowSelectionModule,
+    RowStyleModule,
+    ScrollApiModule,
+    TextEditorModule,
+    TextFilterModule,
+    TooltipModule
+} from 'ag-grid-community';
+import {AgGridReact} from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-balham.css';
 
-// Register additional modules, if any, including Enterprise features if so licensed.
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+// Standard community modules - the baseline set Hoist needs for grids to work.
+ModuleRegistry.registerModules([
+    CellStyleModule,
+    ClientSideRowModelApiModule,
+    ClientSideRowModelModule,
+    ColumnApiModule,
+    CustomEditorModule,
+    PinnedRowModule,
+    RenderApiModule,
+    RowApiModule,
+    RowAutoHeightModule,
+    RowSelectionModule,
+    RowStyleModule,
+    ScrollApiModule,
+    TextEditorModule,
+    TextFilterModule,
+    TooltipModule
+]);
 
-installAgGrid(AgGridReact, ClientSideRowModelModule.version);
+// Opt in to the legacy CSS-variable theme system Hoist styles target. Required for AG Grid v33+.
+provideGlobalGridOptions({theme: 'legacy'});
 
-// Pattern below is used to register enterprise license from config, if you do not wish to commit your license
-// key directly to the source code.
+installAgGrid(AgGridReact as any, ClientSideRowModelModule.version);
+
+// Uncomment and adapt to register Enterprise features if you have a license. Typical Hoist apps
+// pull additional modules such as MenuModule, RowGroupingModule, TreeDataModule, ClipboardModule,
+// CellSelectionModule, etc. from `ag-grid-enterprise`. See toolbox/Bootstrap.ts for a fuller list.
+//
+// import {LicenseManager, MenuModule, RowGroupingModule} from 'ag-grid-enterprise';
+// import {when} from '@xh/hoist/mobx';
+// import {XH} from '@xh/hoist/core';
+// ModuleRegistry.registerModules([MenuModule, RowGroupingModule]);
 // when(
 //     () => XH.appIsRunning,
 //     () => {
