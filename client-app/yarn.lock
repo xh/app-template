@@ -1984,10 +1984,10 @@
     webpack-dev-server "~5.2.0"
     webpackbar "~7.0.0"
 
-"@xh/hoist@~77.0.0":
-  version "77.0.1"
-  resolved "https://registry.yarnpkg.com/@xh/hoist/-/hoist-77.0.1.tgz#b4c1c60cff082b22c99984fc1923aed1da4e7db9"
-  integrity sha512-Fw4vuuTChDMiDrsU9sjhX2oI0O3tQSRmOK5ckQ7o7CAmTmJy7H5Agff0/vOi7cyUahC3ZYFSD4mjE1+7kRRYjg==
+"@xh/hoist@~78.0.0":
+  version "78.0.0"
+  resolved "https://registry.yarnpkg.com/@xh/hoist/-/hoist-78.0.0.tgz#181aadd3fdb7e7227774dc0168779b676cb6f26e"
+  integrity sha512-Fh1OH8ZYL/k/UwPPMZgtRjwbd3KXuKpsIiL+NNa9EdQxOE9UiJ7oRN+tQ0gSEKmQTN/zp65D9kEWQcd+CzO6MA==
   dependencies:
     "@auth0/auth0-spa-js" "~2.7.0"
     "@azure/msal-browser" "~4.25.0"
