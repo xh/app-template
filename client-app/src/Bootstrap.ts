@@ -26,16 +26,15 @@ declare module '@xh/hoist/core' {
 // You must provide and install a suitable Enterprise license if importing and activating any enterprise features.
 //-----------------------------------------------------------------
 import {installAgGrid} from '@xh/hoist/kit/ag-grid';
-import {ModuleRegistry} from '@ag-grid-community/core';
-import '@ag-grid-community/styles/ag-grid.css';
-import '@ag-grid-community/styles/ag-theme-balham.css';
-import {AgGridReact} from '@ag-grid-community/react';
-import {ClientSideRowModelModule} from '@ag-grid-community/client-side-row-model';
+import {ClientSideRowModelModule, ModuleRegistry} from 'ag-grid-community';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-balham.css';
+import {AgGridReact} from 'ag-grid-react';
 
 // Register additional modules, if any, including Enterprise features if so licensed.
 ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
-installAgGrid(AgGridReact, ClientSideRowModelModule.version);
+installAgGrid(AgGridReact as any, ClientSideRowModelModule.version);
 
 // Pattern below is used to register enterprise license from config, if you do not wish to commit your license
 // key directly to the source code.
