@@ -20,7 +20,6 @@ export class AppModel extends HoistAppModel {
         this.tabModel = new TabContainerModel({
             route: 'default',
             track: true,
-            switcher: false,
             tabs: [
                 {
                     id: 'home',
