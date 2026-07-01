@@ -28,7 +28,7 @@
     "@types/react": "18.x",
     "ag-grid-community": "~34.3.1",
     "ag-grid-react": "~34.3.1",
-    "@xh/hoist": "~80.0.1",
+    "@xh/hoist": "~81.0.2",
     "core-js": "3.x",
     "highcharts": "11.x",
     "lodash": "4.x",

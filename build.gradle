@@ -28,7 +28,6 @@ gradle.rootProject {
 repositories {
     mavenCentral()
     maven {url 'https://repo.grails.org/grails/core'}
-    maven {url 'https://repo.xh.io/content/groups/public/'}
 }
 
 configurations {
