@@ -20,10 +20,10 @@ export class WorkModel extends HoistModel {
         const {gridModel} = this;
 
         try {
-            const todos = await XH.fetchJson({
-                url: 'https://jsonplaceholder.typicode.com/todos',
-                loadSpec
-            });
+            const todos = await XH.fetchJson(
+                {url: 'https://jsonplaceholder.typicode.com/todos'},
+                {loadSpec}
+            );
 
             gridModel.loadData(todos);
             XH.successToast({
