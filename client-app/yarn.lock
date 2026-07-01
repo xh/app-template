@@ -2007,10 +2007,10 @@
     webpack-dev-server "~5.2.0"
     webpackbar "~7.0.0"
 
-"@xh/hoist@~79.0.0":
-  version "79.0.0"
-  resolved "https://registry.yarnpkg.com/@xh/hoist/-/hoist-79.0.0.tgz#3eebddb2a185b26af89ee2dbe99e8961dbb401aa"
-  integrity sha512-2Nkuc4NS32jRX8cr+KYTc+TGeknmxD3lBhum4TVhMq3Tdk0TdPpel8sZsAEtwk+cGoqvHRtTxTx/cuj2h530Jg==
+"@xh/hoist@~80.0.1":
+  version "80.0.1"
+  resolved "https://registry.yarnpkg.com/@xh/hoist/-/hoist-80.0.1.tgz#a73cf267aed51959e593c6a6db1e2e4fae81654a"
+  integrity sha512-nTw2c79A8h/zkJS9sB4cg3zRuEqVZRUA913y31aElt9EeXxsM8gQf5/arW+F3+UkbQCo4LLzPW0g0C3+DkdUhw==
   dependencies:
     "@auth0/auth0-spa-js" "~2.9.1"
     "@azure/msal-browser" "~4.26.2"
@@ -2038,6 +2038,7 @@
     golden-layout "~1.5.9"
     http-status-codes "~2.3.0"
     inter-ui "~4.1.1"
+    jquery "3.x"
     jwt-decode "~4.0.0"
     lodash "~4.17.21"
     lodash-inflection "~1.5.0"
@@ -4901,7 +4902,7 @@ jiti@^1.20.0:
   resolved "https://registry.yarnpkg.com/jiti/-/jiti-1.21.7.tgz#9dd81043424a3d28458b193d965f0d18a2300ba9"
   integrity sha512-/imKNG4EbWNrVjoNC/1H5/9GFy+tqjGBHCaSsN+P2RnPqjsLmv6UD3Ej+Kj8nBWaRAwyk7kK5ZUc+OEatnTR3A==
 
-jquery@*:
+jquery@*, jquery@3.x:
   version "3.7.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.7.1.tgz#083ef98927c9a6a74d05a6af02806566d16274de"
   integrity sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==
