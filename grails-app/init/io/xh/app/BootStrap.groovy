@@ -4,8 +4,11 @@ import grails.gorm.transactions.Transactional
 import io.xh.app.security.RoleService
 import io.xh.app.security.User
 import io.xh.hoist.config.ConfigService
+import io.xh.hoist.config.ConfigSpec
 import io.xh.hoist.log.LogSupport
 import io.xh.hoist.pref.PrefService
+import io.xh.hoist.pref.PreferenceSpec
+import io.xh.hoist.role.provided.RoleSpec
 
 import static io.xh.hoist.BaseService.parallelInit
 import static io.xh.hoist.util.InstanceConfigUtils.getInstanceConfig
@@ -52,51 +55,49 @@ class BootStrap implements LogSupport {
 
     private void ensureRequiredConfigsCreated() {
         configService.ensureRequiredConfigsCreated([
-                auth0Config: [
-                        groupName    : 'Security',
-                        valueType    : 'json',
-                        defaultValue : [
-                                clientId             : 'YOUR_CLIENT_ID',
-                                audience             : 'YOUR_AUDIENCE',
-                                domain               : 'YOUR_DOMAIN',
-                                authZeroClientOptions: [useCookiesForTransactions: false],
-                                reloginEnabled       : true
-                        ],
-                        clientVisible: false,
-                        note         : 'Stub config for example Auth0-based OAuth implementation. Replace with your own values, or remove if not planning to use Auth0.',
+            new ConfigSpec(
+                name: 'auth0Config',
+                valueType: 'json',
+                defaultValue: [
+                    clientId: 'YOUR_CLIENT_ID',
+                    audience: 'YOUR_AUDIENCE',
+                    domain: 'YOUR_DOMAIN',
+                    authZeroClientOptions: [useCookiesForTransactions: false],
+                    reloginEnabled: true
                 ],
-                jsLicenses : [
-                        groupName    : 'Technical',
-                        valueType    : 'json',
-                        defaultValue : [agGrid: null],
-                        clientVisible: true
-                ]
+                clientVisible: false,
+                groupName: 'Security',
+                note: 'Stub config for example Auth0-based OAuth implementation. Replace with your own values, or remove if not planning to use Auth0.'
+            ),
+            new ConfigSpec(
+                name: 'jsLicenses',
+                valueType: 'json',
+                defaultValue: [agGrid: null],
+                clientVisible: true,
+                groupName: 'Technical'
+            )
         ])
     }
 
     private void ensureRequiredPrefsCreated() {
-        prefService.ensureRequiredPrefsCreated(
-                [:]
-//                [
-//                        somePref: [
-//                                groupName    : 'App',
-//                                type         : 'json',
-//                                defaultValue : [useFooBar: true],
-//                                clientVisible: true,
-//                                note         : 'Example pref for storing some JSON data.'
-//                        ]
-//                ]
-
-        )
+        prefService.ensureRequiredPrefsCreated([
+//            new PreferenceSpec(
+//                name: 'somePref',
+//                type: 'json',
+//                defaultValue: [useFooBar: true],
+//                groupName: 'App',
+//                notes: 'Example pref for storing some JSON data.'
+//            )
+        ])
     }
 
     private void ensureRequiredRolesCreated() {
         roleService.ensureRequiredRolesCreated([
-//                [
-//                        category: 'App',
-//                        name    : 'SOME_APP_ROLE',
-//                        roles   : ['HOIST_ADMIN']
-//                ]
+//            new RoleSpec(
+//                name: 'SOME_APP_ROLE',
+//                category: 'App',
+//                roles: ['HOIST_ADMIN']
+//            )
         ])
     }
 

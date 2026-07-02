@@ -7,6 +7,9 @@
         "client-app/node_modules/@xh/hoist/bin/hoist-mcp.mjs"
       ],
       "env": {}
+    },
+    "hoist-core": {
+      "command": "./bin/hoist-core-mcp"
     }
   }
 }

@@ -155,20 +155,23 @@ https://github.com/xh/hoist-core.
 - Dev server: `./gradlew bootRun`
 - Production build: `./gradlew war`
 
-## Known Issue: Backend Gradle Build Currently Broken
+## Stack Versions
 
-`hoistCoreVersion` (`gradle.properties`) is `39.1.0`, but this project's `grailsVersion` /
-`groovyVersion` (`6.2.3` / `3.0.23`) predate hoist-core's move to Grails 7 / Groovy 4. Every
-`io.xh:hoist-core` release resolvable from Maven Central (`v36.3.0` and up — the only ones live
-now that `repo.xh.io` is decommissioned) pulls `org.apache.grails:grails-bom:7.x`, which conflicts
-with the pinned Groovy 3 dependency and fails Gradle dependency resolution (`./gradlew
-dependencies` or any task that configures the project).
+- **Grails:** 7.1.1 (Spring Boot 3.5, Groovy 4, Tomcat 10.1, Jakarta EE namespace)
+- **Java:** 21 (toolchain-managed via `majorJavaVersion` in `gradle.properties`)
+- **hoist-core:** 40.1.0
+- **Gradle:** 8.14.4
 
-This means:
-- `./gradlew bootRun` / `./gradlew war` / `installHoistCoreTools` will all fail until resolved.
-- The hoist-core MCP server + CLI tools (`bin/hoist-core-*`) could not be installed as part of
-  onboarding for this reason — see `.mcp.json`, which has a `hoist-react` entry only.
-- This needs a deliberate Grails 6→7 migration (new `grailsVersion` / `groovyVersion` /
-  `gormVersion` / `grailsGradlePluginVersion`, a review of `grails-app/**` for Grails 7 breaking
-  changes) before the backend will build again. Not something to bump around blindly — plan it
-  as its own piece of work.
+Migrated from Grails 6.2.3 / Groovy 3.0.23 in lockstep with the hoist-core upgrade — every
+`io.xh:hoist-core` release on Maven Central (`v36.3.0`+, now that `repo.xh.io` is decommissioned)
+requires Grails 7. Key changes from the Grails 6 era, for reference if diagnosing older forks of
+this template:
+- `javax.servlet.*` → `jakarta.servlet.*` imports
+- `grails-app/conf/logback.groovy` → `grails-app/init/<package>/LogbackConfig.groovy` extending
+  `io.xh.hoist.LogbackConfig`
+- `request.JSON` → `BaseController.parseRequestJSON()` / `parseRequestJSONArray()`
+- Map-based `ensureRequiredConfigsCreated()` / `ensureRequiredPrefsCreated()` /
+  `ensureRequiredRolesCreated()` → typed `ConfigSpec` / `PreferenceSpec` / `RoleSpec`
+- `groovyVersion` / `grailsGradlePluginVersion` / `grailsHibernatePluginVersion` / `gormVersion` /
+  `logback.version` are no longer set directly in `gradle.properties` — managed by the
+  `org.apache.grails:grails-bom` platform in `build.gradle`

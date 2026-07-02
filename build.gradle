@@ -3,31 +3,30 @@ import static java.lang.Boolean.parseBoolean
 buildscript {
     repositories {
         mavenCentral()
-        gradlePluginPortal()
-        maven {url 'https://repo.grails.org/grails/core'}
+        maven {url = 'https://repo.grails.org/grails/restricted'}
     }
-    dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
-        classpath "org.grails.plugins:hibernate5:$grailsHibernatePluginVersion"
-        classpath "co.uzzu.dotenv:gradle:$dotEnvGradlePluginVersion"
+    dependencies { // Not Published to Gradle Plugin Portal
+        classpath platform("org.apache.grails:grails-bom:$grailsVersion")
+        classpath "org.apache.grails:grails-data-hibernate5"
+        classpath "org.apache.grails:grails-gradle-plugins"
     }
 }
 
-version xhAppVersion
-group xhAppPackage
-
-apply plugin:'idea'
-apply plugin:'war'
-apply plugin:'org.grails.grails-web'
-
-// Must be applied to root project - matters when running in a wrapper project mode w/hoist-core.
-gradle.rootProject {
-    apply plugin:'co.uzzu.dotenv.gradle'
+plugins {
+    id 'idea'
+    id 'war'
+    id 'co.uzzu.dotenv.gradle' version "$dotEnvGradlePluginVersion"
 }
+
+// Not Published to Gradle Plugin Portal
+apply plugin: "org.apache.grails.gradle.grails-web"
+
+version = xhAppVersion
+group = xhAppPackage
 
 repositories {
     mavenCentral()
-    maven {url 'https://repo.grails.org/grails/core'}
+    maven {url = 'https://repo.grails.org/grails/restricted'}
 }
 
 configurations {
@@ -41,43 +40,17 @@ springBoot {
     mainClass = xhAppPackage + ".Application"
 }
 
-dependencies {
-    // Hoist Core
-    implementation "io.xh:hoist-core:$hoistCoreVersion"
-
-    // Server-side JWT validation in `AuthZeroTokenService`
-    implementation "org.bitbucket.b_c:jose4j:0.9.6"
-
-    // Database drivers - H2 for temporary in-memory DB with `USE_H2=true` in .env,
-    runtimeOnly "com.h2database:h2:2.2.224"
-    // MySQL would be one suitable option for deployed instances or more stateful local workstation setups.
-    // Any database supported by GORM should work, including Postgres, SQL Server, etc.
-    runtimeOnly "mysql:mysql-connector-java:8.0.33"
-
-    // For hot reloading
-    developmentOnly "io.methvin:directory-watcher:0.15.0"
-    if (parseBoolean(enableHotSwap)) {
-        developmentOnly "io.xh:groovyReset:1.0"
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(Integer.parseInt(majorJavaVersion))
     }
 }
-
-// Avoid unexpected errors with overly-long classpath on Windows development machines.
-grails {
-    pathingJar = true
-}
-
-Map hoistMetaData = [
-    'info.xh.appCode': xhAppCode,
-    'info.xh.appName': xhAppName,
-    'info.xh.appPackage': xhAppPackage,
-    'info.xh.appBuild': findProperty('xhAppBuild') ?: 'UNKNOWN'
-]
 
 def allJvmArgs = [
     '-Dspring.output.ansi.enabled=always',
     '-XX:TieredStopAtLevel=1',
+    '-XX:CICompilerCount=3',
     '-Xmx' + localDevXmx,
-    "--add-modules=java.se",
     "--add-exports=java.base/jdk.internal.ref=ALL-UNNAMED",
     "--add-opens=java.base/java.lang=ALL-UNNAMED",
     "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
@@ -87,19 +60,49 @@ def allJvmArgs = [
 ]
 
 if (parseBoolean(enableHotSwap)) {
-    def groovyReset = configurations.developmentOnly.resolve().find {it.name.contains("groovyReset")}
+    // Enhance JVM args, including Groovy Reset as agent
+    def groovyReset = configurations.detachedConfiguration(
+        dependencies.create("io.xh:groovyReset:1.0")
+    )
     allJvmArgs += [
         '-XX:HotswapAgent=fatjar',
         '-XX:+AllowEnhancedClassRedefinition',
-        '-javaagent:' + groovyReset.absolutePath
+        "-Dspring.devtools.restart.enabled=false",
+        "-Dspring.devtools.livereload.enabled=false",
+        "-javaagent:" + groovyReset.singleFile.absolutePath
     ]
 }
 
-bootRun {
-    ignoreExitValue true
+dependencies {
+    // Hoist Core
+    implementation "io.xh:hoist-core:$hoistCoreVersion"
+
+    // Server-side JWT validation in `AuthZeroTokenService`
+    implementation "org.bitbucket.b_c:jose4j:0.9.6"
+
+    // Database drivers - H2 for temporary in-memory DB with `USE_H2=true` in .env,
+    runtimeOnly "com.h2database:h2"
+    // MySQL would be one suitable option for deployed instances or more stateful local workstation setups.
+    // Any database supported by GORM should work, including Postgres, SQL Server, etc.
+    runtimeOnly "com.mysql:mysql-connector-j:8.4.0"
+
+    // For hot reloading
+    developmentOnly "io.methvin:directory-watcher:0.19.1"
+    console "org.apache.grails:grails-console"
+}
+
+Map hoistMetaData = [
+    'info.xh.appCode': xhAppCode,
+    'info.xh.appName': xhAppName,
+    'info.xh.appPackage': xhAppPackage,
+    'info.xh.appBuild': findProperty('xhAppBuild') ?: 'UNKNOWN'
+]
+
+def execTasks = tasks.matching {it.name == 'bootRun' || it.name == 'console'}
+execTasks.configureEach {
+    ignoreExitValue = true
     systemProperties System.properties
     jvmArgs(allJvmArgs)
-    sourceResources sourceSets.main
     systemProperties hoistMetaData
     // Bring .env sourced environment variables into bootRun JVM process.
     environment env.allVariables()
@@ -132,45 +135,86 @@ tasks.war.doFirst {
 }
 
 // Ensure that all variables defined in .env.template are set in local .env
-tasks.bootRun.doFirst {
-    def missingEnvVars = env.allVariablesOrNull().findAll {it.value == null}.collect {it.key}
-    if (missingEnvVars) {
-        throw new GradleException("Environment variables listed in .env.template not set in local .env file as required: ${missingEnvVars}")
+execTasks.all {task ->
+    task.doFirst {
+        def missingEnvVars = env.allVariablesOrNull().findAll {it.value == null}.collect {it.key}
+        if (missingEnvVars) {
+            throw new GradleException("Environment variables listed in .env.template not set in local .env file as required: ${missingEnvVars}")
+        }
     }
 }
 
 //--------------------------------------------------
-// hoist-core MCP server + CLI tools (AI dev tooling)
+// hoist-core MCP server + CLI tools — version-locked launchers
 //--------------------------------------------------
 configurations {
     hoistCoreCli
 }
 
 dependencies {
-    hoistCoreCli "io.xh:hoist-core-mcp:${hoistCoreVersion}:all@jar"
+    // Resolve the active hoist-core version lazily from the runtime classpath. Works whether
+    // hoist-core is declared directly, via gradle.properties, or pulled in transitively via a
+    // client plugin -- the install task stays aligned with whatever hoist-core version actually
+    // resolves at build time.
+    hoistCoreCli providers.provider {
+        def hc = configurations.runtimeClasspath.incoming.resolutionResult.allComponents
+            .find { it.moduleVersion?.group == 'io.xh' && it.moduleVersion?.name == 'hoist-core' }
+        if (!hc) throw new GradleException(
+            'hoist-core not found on the runtimeClasspath -- cannot install hoist-core tools.')
+        "io.xh:hoist-core-mcp:${hc.moduleVersion.version}:all@jar"
+    }
 }
 
 tasks.register('installHoistCoreTools', Sync) {
     description = 'Install version-locked launchers for the hoist-core MCP server and CLI tools.'
     group = 'hoist'
     from configurations.hoistCoreCli
-    into "$buildDir/hoist-core-tools/lib"
+    into layout.buildDirectory.dir('hoist-core-tools/lib')
     doLast {
-        def jar = fileTree("$buildDir/hoist-core-tools/lib").singleFile
+        def jar = fileTree(layout.buildDirectory.dir('hoist-core-tools/lib')).singleFile
         def binDir = file('bin')
         binDir.mkdirs()
+        def launcherNames = []
         ['mcp', 'docs', 'symbols'].each { topic ->
-            // mcp mode: pass --source bundled so the server reads JAR-embedded content. Without this,
-            //           HoistCoreMcpServer defaults to local mode and fails when the app has no
-            //           hoist-core checkout sibling. (CLI subcommands already default to bundled.)
-            // docs/symbols mode: dispatched via `cli`, which routes to picocli with bundled default.
+            // mcp mode: pass --source bundled so the server reads JAR-embedded content. Without
+            //           this, HoistCoreMcpServer defaults to local mode and fails when the app
+            //           has no hoist-core checkout sibling.
+            // docs/symbols: dispatched via `cli`, which routes to picocli (defaults to bundled).
             def args = topic == 'mcp' ? '--source bundled' : "cli ${topic}"
+            // The bash launcher resolves `java` from PATH, falling back to JAVA_HOME, so it
+            // works under MCP clients launched from non-interactive shells where a JDK version
+            // manager (mise, asdf, jenv) may not have activated.
             new File(binDir, "hoist-core-${topic}").with {
-                text = "#!/usr/bin/env bash\nexec java -jar \"${jar.absolutePath}\" ${args} \"\$@\"\n"
+                text = """\
+#!/usr/bin/env bash
+if command -v java >/dev/null 2>&1; then
+    JAVA=java
+elif [ -n "\$JAVA_HOME" ] && [ -x "\$JAVA_HOME/bin/java" ]; then
+    JAVA="\$JAVA_HOME/bin/java"
+else
+    cat >&2 <<'EOF'
+[hoist-core] ERROR: 'java' not on PATH and JAVA_HOME is unset or invalid.
+
+If you use a JDK version manager (mise, asdf, jenv), it likely activates only in
+interactive shells - but this script runs in the non-interactive shell launched by
+your MCP client. Either export JAVA_HOME from a non-interactive init file (e.g.
+~/.bash_profile, ~/.zshenv) so it is visible here, or activate the version manager
+from one of those files. Pointing JAVA_HOME at any JDK 17+ install is sufficient.
+EOF
+    exit 1
+fi
+exec "\$JAVA" -jar "${jar.absolutePath}" ${args} "\$@"
+"""
                 setExecutable(true)
             }
             new File(binDir, "hoist-core-${topic}.bat").text =
                 "@echo off\r\njava -jar \"${jar.absolutePath}\" ${args} %*\r\n"
+            launcherNames << "hoist-core-${topic}"
+            launcherNames << "hoist-core-${topic}.bat"
         }
+        // Generated launchers embed an absolute path to the resolved JAR, so they are
+        // machine-specific and must not be committed. Write a scoped bin/.gitignore that
+        // excludes only the generated launchers, leaving the rest of bin/ untouched.
+        new File(binDir, '.gitignore').text = launcherNames.sort().join('\n') + '\n'
     }
 }
