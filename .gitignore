@@ -19,7 +19,7 @@ node_modules/
 /client-app/build/
 /client-app/tsconfig.tsbuildinfo
 
-# Logs + temp
+# Logs
 hoistapp-logs/
 *.log
 
