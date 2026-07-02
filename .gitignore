@@ -6,8 +6,6 @@
 .settings
 .project
 .classpath
-.vscode/tasks.json
-.claude/scheduled_tasks.lock
 
 # Local env w/secrets
 .env
@@ -24,7 +22,6 @@ node_modules/
 # Logs + temp
 hoistapp-logs/
 *.log
-.tmp
 
 # OS generated files
 .DS_Store
