@@ -28,6 +28,7 @@
   "dependencies": {
     "@types/react": "18.x",
     "ag-grid-community": "~35.3.0",
+    "ag-grid-enterprise": "~35.3.0",
     "ag-grid-react": "~35.3.0",
     "@xh/hoist": "~86.2.0",
     "core-js": "3.x",
