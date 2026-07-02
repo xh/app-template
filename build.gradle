@@ -88,7 +88,6 @@ dependencies {
 
     // For hot reloading
     developmentOnly "io.methvin:directory-watcher:0.19.1"
-    console "org.apache.grails:grails-console"
 }
 
 Map hoistMetaData = [
