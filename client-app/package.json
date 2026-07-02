@@ -6,14 +6,14 @@
   "scripts": {
     "build": "webpack --env prodBuild",
     "buildAndAnalyze": "webpack --env prodBuild --env analyzeBundles",
-    "lint": "yarn lint:all",
-    "lint:all": "yarn lint:code && yarn lint:styles && yarn lint:types",
+    "lint": "npm run lint:all",
+    "lint:all": "npm run lint:code && npm run lint:styles && npm run lint:types",
     "lint:code": "eslint .",
     "lint:styles": "stylelint \"**/*.s?(a|c)ss\"",
     "lint:types": "tsc",
     "prepare": "cd .. && husky client-app/.husky",
-    "start": "yarn install && cross-env NODE_OPTIONS=--max_old_space_size=3072 webpack-dev-server",
-    "startAndAnalyze": "yarn start --env analyzeBundles"
+    "start": "npm install && cross-env NODE_OPTIONS=--max_old_space_size=3072 webpack-dev-server",
+    "startAndAnalyze": "npm run start -- --env analyzeBundles"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -50,12 +50,11 @@
     "stylelint-config-standard-scss": "17.x",
     "typescript": "~5.9.2"
   },
-  "resolutions": {
+  "overrides": {
     "core-js": "3.x",
     "@types/react": "18.x",
     "@types/react-dom": "18.x",
     "@typescript-eslint/parser": "8.x",
     "@typescript-eslint/scope-manager": "8.x"
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  }
 }

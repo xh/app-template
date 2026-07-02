@@ -42,10 +42,9 @@ The only local prerequisites for running this template are:
     * Mac users can use [Homebrew](https://brew.sh/) to install with `brew install openjdk@21`, or
       use SDKMan (https://sdkman.io/) for a more general-purpose JDK manager.
     * Validate by running `java -version` in a terminal.
-* **Node LTS or newer + Yarn 1.x**
+* **Node LTS or newer** (npm ships bundled with Node)
     * Install Node from [nodejs.org](https://nodejs.org/en/download/) or via a package manager.
-    * Install Yarn via `npm install -g yarn` or via a package manager.
-    * Validate by running `node -v` and `yarn -v` in a terminal.
+    * Validate by running `node -v` and `npm -v` in a terminal.
 
 ## Running the Template
 
@@ -77,9 +76,9 @@ to confirm that the server has started, then leave running in that terminal and 
 From there, run:
 
 ```
-cd cient-app
-yarn install
-yarn start
+cd client-app
+npm install
+npm start
 ```
 
 to install the client-side dependencies and start the client application via WebPack dev server.
