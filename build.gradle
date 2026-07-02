@@ -138,3 +138,39 @@ tasks.bootRun.doFirst {
         throw new GradleException("Environment variables listed in .env.template not set in local .env file as required: ${missingEnvVars}")
     }
 }
+
+//--------------------------------------------------
+// hoist-core MCP server + CLI tools (AI dev tooling)
+//--------------------------------------------------
+configurations {
+    hoistCoreCli
+}
+
+dependencies {
+    hoistCoreCli "io.xh:hoist-core-mcp:${hoistCoreVersion}:all@jar"
+}
+
+tasks.register('installHoistCoreTools', Sync) {
+    description = 'Install version-locked launchers for the hoist-core MCP server and CLI tools.'
+    group = 'hoist'
+    from configurations.hoistCoreCli
+    into "$buildDir/hoist-core-tools/lib"
+    doLast {
+        def jar = fileTree("$buildDir/hoist-core-tools/lib").singleFile
+        def binDir = file('bin')
+        binDir.mkdirs()
+        ['mcp', 'docs', 'symbols'].each { topic ->
+            // mcp mode: pass --source bundled so the server reads JAR-embedded content. Without this,
+            //           HoistCoreMcpServer defaults to local mode and fails when the app has no
+            //           hoist-core checkout sibling. (CLI subcommands already default to bundled.)
+            // docs/symbols mode: dispatched via `cli`, which routes to picocli with bundled default.
+            def args = topic == 'mcp' ? '--source bundled' : "cli ${topic}"
+            new File(binDir, "hoist-core-${topic}").with {
+                text = "#!/usr/bin/env bash\nexec java -jar \"${jar.absolutePath}\" ${args} \"\$@\"\n"
+                setExecutable(true)
+            }
+            new File(binDir, "hoist-core-${topic}.bat").text =
+                "@echo off\r\njava -jar \"${jar.absolutePath}\" ${args} %*\r\n"
+        }
+    }
+}
