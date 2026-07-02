@@ -23,18 +23,11 @@ declare module '@xh/hoist/core' {
 
 //-----------------------------------------------------------------
 // AG Grid Registration
-//
-// IMPORTANT: The Enterprise modules below (row grouping / tree data) are required by Hoist's
-// own Admin Console (e.g. its Activity Tracking tab uses a tree grid). Registering them without
-// a valid license key still works, but AG Grid will show a console watermark/warning until you
-// set your license via the jsLicenses config below - see https://ag-grid.com/react-data-grid/licensing.
+// You must provide and install a suitable Enterprise license if importing and activating any enterprise features.
 //-----------------------------------------------------------------
-import {XH} from '@xh/hoist/core';
 import {installAgGrid} from '@xh/hoist/kit/ag-grid';
 import {ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
-import {LicenseManager} from 'ag-grid-enterprise';
 import {AgGridReact} from 'ag-grid-react';
-import {when} from '@xh/hoist/mobx';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 
@@ -96,13 +89,15 @@ provideGlobalGridOptions({theme: 'legacy'});
 
 installAgGrid(AgGridReact as any, ClientSideRowModelModule.version);
 
-when(
-    () => XH.appIsRunning,
-    () => {
-        const agLicense = XH.getConf('jsLicenses').agGrid;
-        if (agLicense) LicenseManager.setLicenseKey(agLicense);
-    }
-);
+// Pattern below is used to register enterprise license from config, if you do not wish to commit your license
+// key directly to the source code.
+// when(
+//     () => XH.appIsRunning,
+//     () => {
+//         const agLicense = XH.getConf('jsLicenses').agGrid;
+//         if (agLicense) LicenseManager.setLicenseKey(agLicense);
+//     }
+// );
 
 //-------------------------------------------------------------------------------
 // Highcharts Registration
