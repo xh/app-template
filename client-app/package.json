@@ -6,13 +6,14 @@
   "scripts": {
     "build": "webpack --env prodBuild",
     "buildAndAnalyze": "webpack --env prodBuild --env analyzeBundles",
-    "lint": "yarn lint:all",
-    "lint:all": "yarn lint:code && yarn lint:styles",
+    "lint": "npm run lint:all",
+    "lint:all": "npm run lint:code && npm run lint:styles && npm run lint:types",
     "lint:code": "eslint .",
     "lint:styles": "stylelint \"**/*.s?(a|c)ss\"",
+    "lint:types": "tsc",
     "prepare": "cd .. && husky client-app/.husky",
-    "start": "yarn install && cross-env NODE_OPTIONS=--max_old_space_size=3072 webpack-dev-server",
-    "startAndAnalyze": "yarn start --env analyzeBundles"
+    "start": "npm install && cross-env NODE_OPTIONS=--max_old_space_size=3072 webpack-dev-server",
+    "startAndAnalyze": "npm run start -- --env analyzeBundles"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -25,36 +26,34 @@
     ]
   },
   "dependencies": {
-    "@ag-grid-community/client-side-row-model": "~31.2.0",
-    "@ag-grid-community/core": "~31.2.0",
-    "@ag-grid-community/react": "~31.2.0",
-    "@ag-grid-community/styles": "~31.2.0",
     "@types/react": "18.x",
-    "@xh/hoist": "~73.0.1",
+    "ag-grid-community": "~35.3.0",
+    "ag-grid-enterprise": "~35.3.0",
+    "ag-grid-react": "~35.3.0",
+    "@xh/hoist": "~86.2.0",
     "core-js": "3.x",
-    "highcharts": "11.x",
+    "highcharts": "12.x",
     "lodash": "4.x",
     "moment": "2.x",
     "react": "~18.2.0",
     "react-dom": "~18.2.0"
   },
   "devDependencies": {
-    "@xh/hoist-dev-utils": "11.x",
-    "cross-env": "7.x",
-    "eslint": "9.x",
+    "@xh/hoist-dev-utils": "13.x",
+    "cross-env": "10.x",
+    "eslint": "10.x",
     "eslint-config-prettier": "10.x",
     "husky": "9.x",
-    "lint-staged": "15.x",
+    "lint-staged": "17.x",
     "postcss": "8.x",
     "prettier": "3.x",
-    "stylelint": "16.x",
-    "stylelint-config-standard-scss": "15.x",
-    "typescript": "^5.8.3"
+    "stylelint": "17.x",
+    "stylelint-config-standard-scss": "17.x",
+    "typescript": "~5.9.2"
   },
-  "resolutions": {
+  "overrides": {
     "core-js": "3.x",
     "@types/react": "18.x",
     "@types/react-dom": "18.x"
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  }
 }

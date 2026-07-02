@@ -1,6 +1,6 @@
 import {a, p, placeholder} from '@xh/hoist/cmp/layout';
 import {TabContainerModel} from '@xh/hoist/cmp/tab';
-import {HoistAppModel, LoadSpec, XH} from '@xh/hoist/core';
+import {HoistAppModel, InitContext, LoadSpec, XH} from '@xh/hoist/core';
 import {
     autoRefreshAppOption,
     sizingModeAppOption,
@@ -14,13 +14,12 @@ export class AppModel extends HoistAppModel {
 
     tabModel: TabContainerModel;
 
-    override async initAsync() {
-        await super.initAsync();
+    override async initAsync(ctx: InitContext) {
+        await super.initAsync(ctx);
 
         this.tabModel = new TabContainerModel({
             route: 'default',
             track: true,
-            switcher: false,
             tabs: [
                 {
                     id: 'home',
@@ -40,14 +39,11 @@ export class AppModel extends HoistAppModel {
             ]
         });
 
-        await this.loadAsync();
+        await this.loadAsync({span: ctx.span});
     }
 
     override async doLoadAsync(loadSpec: LoadSpec) {
-        const {greeting} = await XH.fetchJson({
-            url: 'helloWorld',
-            loadSpec
-        });
+        const {greeting} = await XH.fetchJson({url: 'helloWorld'}, {loadSpec});
 
         XH.successToast(`👋 ${greeting}`);
     }

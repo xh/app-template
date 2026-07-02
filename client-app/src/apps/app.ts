@@ -14,6 +14,5 @@ XH.renderApp({
     containerClass: AppContainer,
     isMobileApp: false,
     enableLogout: true,
-    webSocketsEnabled: true,
     checkAccess: () => true
 });
