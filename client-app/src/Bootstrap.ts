@@ -26,13 +26,51 @@ declare module '@xh/hoist/core' {
 // You must provide and install a suitable Enterprise license if importing and activating any enterprise features.
 //-----------------------------------------------------------------
 import {installAgGrid} from '@xh/hoist/kit/ag-grid';
-import {ClientSideRowModelModule, ModuleRegistry} from 'ag-grid-community';
+import {ModuleRegistry, provideGlobalGridOptions} from 'ag-grid-community';
+import {AgGridReact} from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
-import {AgGridReact} from 'ag-grid-react';
 
-// Register additional modules, if any, including Enterprise features if so licensed.
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+// Standard community modules - required for all Hoist Apps. Add Enterprise modules here too,
+// if so licensed - see Hoist and AG Grid docs for details.
+import {
+    CellStyleModule,
+    ClientSideRowModelApiModule,
+    ClientSideRowModelModule,
+    ColumnApiModule,
+    CustomEditorModule,
+    PinnedRowModule,
+    RenderApiModule,
+    RowApiModule,
+    RowAutoHeightModule,
+    RowSelectionModule,
+    RowStyleModule,
+    ScrollApiModule,
+    TextEditorModule,
+    TextFilterModule,
+    TooltipModule
+} from 'ag-grid-community';
+ModuleRegistry.registerModules([
+    CellStyleModule,
+    ClientSideRowModelApiModule,
+    ClientSideRowModelModule,
+    ColumnApiModule,
+    CustomEditorModule,
+    PinnedRowModule,
+    RenderApiModule,
+    RowApiModule,
+    RowAutoHeightModule,
+    RowSelectionModule,
+    RowStyleModule,
+    ScrollApiModule,
+    TextEditorModule,
+    TextFilterModule,
+    TooltipModule
+]);
+
+// Use the legacy CSS-based theme (ag-theme-balham.css above) rather than AG Grid's newer
+// JS-based Theming API.
+provideGlobalGridOptions({theme: 'legacy'});
 
 installAgGrid(AgGridReact as any, ClientSideRowModelModule.version);
 
@@ -52,17 +90,18 @@ installAgGrid(AgGridReact as any, ClientSideRowModelModule.version);
 //-------------------------------------------------------------------------------
 import {installHighcharts} from '@xh/hoist/kit/highcharts';
 import Highcharts from 'highcharts/highstock';
-import highchartsExportData from 'highcharts/modules/export-data';
-import highchartsExporting from 'highcharts/modules/exporting';
-import highchartsHeatmap from 'highcharts/modules/heatmap';
-import highchartsOfflineExporting from 'highcharts/modules/offline-exporting';
-import highchartsTree from 'highcharts/modules/treemap';
-import highchartsTreeGraph from 'highcharts/modules/treegraph';
 
-highchartsExportData(Highcharts);
-highchartsExporting(Highcharts);
-highchartsHeatmap(Highcharts);
-highchartsOfflineExporting(Highcharts);
-highchartsTree(Highcharts);
-highchartsTreeGraph(Highcharts);
+// Check https://api.highcharts.com/highcharts/ for modules that require other base modules and
+// import in order. Highcharts v12 modules self-register via side effect - do not call as functions.
+import 'highcharts/modules/exporting';
+import 'highcharts/modules/heatmap';
+import 'highcharts/modules/treemap';
+
+// `treegraph` must be imported after `treemap`
+import 'highcharts/modules/treegraph';
+
+// `export-data` + `offline-exporting` must be imported after `exporting`
+import 'highcharts/modules/export-data';
+import 'highcharts/modules/offline-exporting';
+
 installHighcharts(Highcharts);

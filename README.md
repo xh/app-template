@@ -32,14 +32,14 @@ few default configurations that would *not* be suitable for running in productio
 
 The only local prerequisites for running this template are:
 
-* **Java JDK 17** - with `java` on your system PATH or `JAVA_HOME` set to the JDK install location.
+* **Java JDK 21** - with `java` on your system PATH or `JAVA_HOME` set to the JDK install location.
     * Many IDEs offer a built-in way to manage JDKs and run projects under a particular JDK. If you
       are using IntelliJ, you can set the JDK in the project settings (File > Project Structure)
       and then run the app from the IDE. In that case, we recommend the JetBrains (JBR) distro.
     * Windows users can also install an [OpenJDK distro from Microsoft](https://www.ag-grid.com/),
       as just one option, or download and unpack a zipped JDK without an install routine and add it
       to your `PATH` or set `JAVA_HOME` (no admin rights required).
-    * Mac users can use [Homebrew](https://brew.sh/) to install with `brew install openjdk@17`, or
+    * Mac users can use [Homebrew](https://brew.sh/) to install with `brew install openjdk@21`, or
       use SDKMan (https://sdkman.io/) for a more general-purpose JDK manager.
     * Validate by running `java -version` in a terminal.
 * **Node LTS or newer + Yarn 1.x**
