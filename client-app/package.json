@@ -54,8 +54,6 @@
   "overrides": {
     "core-js": "3.x",
     "@types/react": "18.x",
-    "@types/react-dom": "18.x",
-    "@typescript-eslint/parser": "8.x",
-    "@typescript-eslint/scope-manager": "8.x"
+    "@types/react-dom": "18.x"
   }
 }
