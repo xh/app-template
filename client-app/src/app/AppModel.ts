@@ -43,10 +43,7 @@ export class AppModel extends HoistAppModel {
     }
 
     override async doLoadAsync(loadSpec: LoadSpec) {
-        const {greeting} = await XH.fetchJson({
-            url: 'helloWorld',
-            loadSpec
-        });
+        const {greeting} = await XH.fetchJson({url: 'helloWorld'}, {loadSpec});
 
         XH.successToast(`👋 ${greeting}`);
     }
