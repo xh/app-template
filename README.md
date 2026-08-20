@@ -32,20 +32,26 @@ few default configurations that would *not* be suitable for running in productio
 
 The only local prerequisites for running this template are:
 
-* **Java JDK 17** - with `java` on your system PATH or `JAVA_HOME` set to the JDK install location.
+* **Java JDK 21** - with `java` on your system PATH or `JAVA_HOME` set to the JDK install location.
     * Many IDEs offer a built-in way to manage JDKs and run projects under a particular JDK. If you
       are using IntelliJ, you can set the JDK in the project settings (File > Project Structure)
       and then run the app from the IDE. In that case, we recommend the JetBrains (JBR) distro.
     * Windows users can also install an [OpenJDK distro from Microsoft](https://www.ag-grid.com/),
       as just one option, or download and unpack a zipped JDK without an install routine and add it
       to your `PATH` or set `JAVA_HOME` (no admin rights required).
-    * Mac users can use [Homebrew](https://brew.sh/) to install with `brew install openjdk@17`, or
+    * Mac users can use [Homebrew](https://brew.sh/) to install with `brew install openjdk@21`, or
       use SDKMan (https://sdkman.io/) for a more general-purpose JDK manager.
     * Validate by running `java -version` in a terminal.
-* **Node LTS or newer + Yarn 1.x**
+* **Node 22.15 or newer + pnpm**
     * Install Node from [nodejs.org](https://nodejs.org/en/download/) or via a package manager.
-    * Install Yarn via `npm install -g yarn` or via a package manager.
-    * Validate by running `node -v` and `yarn -v` in a terminal.
+      `client-app/.nvmrc` tracks `lts/*`, so `nvm use` picks a suitable version.
+    * pnpm is the package manager, pinned via the `packageManager` field in
+      `client-app/package.json`. Enable Corepack once with `corepack enable pnpm` and it will
+      install the pinned version on first use.
+    * Validate by running `node -v` and `pnpm -v` in a terminal.
+* **A Font Awesome Pro token** - hoist-react depends on the `@fortawesome/*` Pro packages.
+  `client-app/.npmrc` points at the Pro registry but deliberately carries no credential. Add
+  `//npm.fontawesome.com/:_authToken=<your-token>` to your `~/.npmrc` before installing.
 
 ## Running the Template
 
@@ -77,9 +83,9 @@ to confirm that the server has started, then leave running in that terminal and 
 From there, run:
 
 ```
-cd cient-app
-yarn install
-yarn start
+cd client-app
+pnpm install
+pnpm start
 ```
 
 to install the client-side dependencies and start the client application via WebPack dev server.

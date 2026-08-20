@@ -187,7 +187,7 @@ default in `.claude/settings.json` under `enabledMcpjsonServers`.
 
 A local Node.js process that exposes hoist-react framework documentation and symbol search. It
 runs directly from `client-app/node_modules/@xh/hoist/bin/hoist-mcp.mjs` -- no additional setup
-required beyond `yarn install`. See the `xh:using-hoist-react-reference` skill for the routing
+required beyond `pnpm install`. See the `xh:using-hoist-react-reference` skill for the routing
 table of MCP and CLI surfaces.
 
 ### hoist-core (enabled by default, requires one-time install)
@@ -237,13 +237,14 @@ return empty results** for Groovy code. For navigating into Groovy, use Grep/Glo
 
 ## Tech Stack
 
-- **Frontend**: TypeScript, React 18, MobX, AG Grid Community, Highcharts, `@xh/hoist`
+- **Frontend**: TypeScript, React 19, MobX, AG Grid Community, Highcharts, `@xh/hoist`
 - **Backend**: Grails 7 (Groovy/Spring Boot), `hoist-core`
 - **JDK**: 21 (set via `majorJavaVersion` in `gradle.properties`; the Gradle Java toolchain in
   `build.gradle` reads that value, and the Tomcat base image in `docker/tomcat/Dockerfile` carries
   a matching `jdk21` suffix -- keep these in sync if you bump the toolchain).
 - **Database**: H2 in-memory by default (see README caveats); MySQL connector is included.
-- **Package Manager**: Yarn 1.22 (frontend), Gradle 8.14 via wrapper (backend).
+- **Package Manager**: pnpm 11 (frontend, pinned via `packageManager` in `client-app/package.json`),
+  Gradle 8.14.5 via wrapper (backend).
 
 ### A note on JDK 21 specifically
 
@@ -258,13 +259,15 @@ future, only the daemon JVM needs to be a supported LTS that the active Gradle v
 ### Frontend (run from `client-app/`)
 
 ```bash
-yarn install              # Install dependencies (also runs husky hook setup)
-yarn start                # Dev server on port 3000
-yarn build                # Production build (output to client-app/build/)
-yarn buildAndAnalyze      # Production build + webpack bundle analyzer
-yarn lint                 # ESLint + Stylelint
-yarn lint:code            # ESLint only
-yarn lint:styles          # Stylelint only
+pnpm install              # Install dependencies (also runs husky hook setup)
+pnpm start                # Dev server on port 3000
+pnpm build                # Production build (output to client-app/build/)
+pnpm buildAndAnalyze      # Production build + webpack bundle analyzer
+pnpm lint                 # ESLint + Stylelint
+pnpm lint:code            # ESLint only
+pnpm lint:styles          # Stylelint only
+pnpm typecheck            # tsc --noEmit (not covered by lint)
+pnpm startWithHoist       # Dev server against a sibling ../hoist-react checkout
 ```
 
 ### Backend (run from project root)
@@ -280,7 +283,7 @@ yarn lint:styles          # Stylelint only
 
 Run both simultaneously:
 - Terminal 1: `./gradlew bootRun`
-- Terminal 2: `cd client-app && yarn start`
+- Terminal 2: `cd client-app && pnpm start`
 
 The webpack dev server runs on **`http://localhost:3000`**. Each file under
 `client-app/src/apps/` defines an entry point, and its filename (minus the extension) becomes
@@ -303,7 +306,7 @@ log in with the credentials configured in `.env` (defaults to `admin@xh.io / adm
 
 Husky runs automatically on commit via `lint-staged` (Prettier + ESLint/Stylelint on staged files)
 and conditionally the TypeScript compiler if TS/JS/package files are staged. Re-run
-`yarn install` from `client-app/` to (re)install the hook scripts after pulling fresh.
+`pnpm install` from `client-app/` to (re)install the hook scripts after pulling fresh.
 
 ## Code Style
 
@@ -387,6 +390,6 @@ app development.
 
 - **`../hoist-core`** -- Groovy/Java backend framework. Enable with `runHoistInline=true` in
   `gradle.properties`.
-- **`../hoist-react`** -- React frontend library. Enable with `yarn startWithHoist` from
-  `client-app/` (note: the template's `package.json` does not currently expose this script --
-  see the toolbox/jobsite siblings for the pattern if you need it).
+- **`../hoist-react`** -- React frontend library. Enable with `pnpm startWithHoist` from
+  `client-app/`. Note that hoist-react itself is managed with pnpm, so an inline checkout needs
+  its own `pnpm install` regardless of what the app uses.
