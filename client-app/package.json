@@ -32,6 +32,7 @@
   "dependencies": {
     "@xh/hoist": "~87.0.0",
     "ag-grid-community": "~35.3.1",
+    "ag-grid-enterprise": "~35.3.1",
     "ag-grid-react": "~35.3.1",
     "core-js": "~3.50.0",
     "highcharts": "~12.6.0",

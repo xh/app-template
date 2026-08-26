@@ -23,45 +23,44 @@ declare module '@xh/hoist/core' {
 
 //-----------------------------------------------------------------
 // AG Grid Registration
-// You must provide and install a suitable Enterprise license if importing and activating any
-// enterprise features.
 //-----------------------------------------------------------------
 import {installAgGrid} from '@xh/hoist/kit/ag-grid';
+import {XH} from '@xh/hoist/core';
+import {when} from '@xh/hoist/mobx';
 import {
     AllCommunityModule,
     ClientSideRowModelModule,
     ModuleRegistry,
     provideGlobalGridOptions
 } from 'ag-grid-community';
+import {AllEnterpriseModule, LicenseManager} from 'ag-grid-enterprise';
 import {AgGridReact} from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-balham.css';
 
-// Register the full community module set. Curating a module-by-module list saves no meaningful
-// bundle size in a typical Hoist app, and a missing module fails silently at runtime - notably
-// `RowDragModule`, which the grid column chooser needs for drag-and-drop reordering.
-ModuleRegistry.registerModules([AllCommunityModule]);
+// Register the full community and enterprise module sets. Curating a module-by-module list saves
+// little in shipped code, and a missing module fails silently at runtime rather than erroring -
+// e.g. the enterprise TreeDataModule, which the Hoist Admin Console requires for the tree grids on
+// its Cluster Objects, Activity Tracking, and Roles tabs, and the community RowDragModule, which
+// the grid column chooser needs for drag-and-drop reordering.
+ModuleRegistry.registerModules([AllCommunityModule, AllEnterpriseModule]);
 
 // Opt in to the legacy CSS-variable theme system Hoist styles target. Required for AG Grid v33+.
 provideGlobalGridOptions({theme: 'legacy'});
 
 installAgGrid(AgGridReact as any, ClientSideRowModelModule.version);
 
-// Uncomment and adapt to register Enterprise features if you have a license. Typical Hoist apps
-// pull additional modules such as MenuModule, RowGroupingModule, TreeDataModule, ClipboardModule,
-// CellSelectionModule, etc. from `ag-grid-enterprise`. See toolbox/Bootstrap.ts for a fuller list.
-//
-// import {LicenseManager, MenuModule, RowGroupingModule} from 'ag-grid-enterprise';
-// import {when} from '@xh/hoist/mobx';
-// import {XH} from '@xh/hoist/core';
-// ModuleRegistry.registerModules([MenuModule, RowGroupingModule]);
-// when(
-//     () => XH.appIsRunning,
-//     () => {
-//         const agLicense = XH.getConf('jsLicenses').agGrid;
-//         if (agLicense) LicenseManager.setLicenseKey(agLicense);
-//     }
-// );
+// AG Grid Enterprise requires a paid license. Hoist itself needs it for the Admin Console tree
+// grids above, so the dependency is not optional for a standard app. Put your key in the
+// `jsLicenses` config (Admin Console > Configs) under `agGrid`. Without one, grids stay fully
+// functional but render an evaluation watermark and log a console error.
+when(
+    () => XH.appIsRunning,
+    () => {
+        const agLicense = XH.getConf('jsLicenses')?.agGrid;
+        if (agLicense) LicenseManager.setLicenseKey(agLicense);
+    }
+);
 
 //-------------------------------------------------------------------------------
 // Highcharts Registration

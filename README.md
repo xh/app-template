@@ -22,11 +22,15 @@ few default configurations that would *not* be suitable for running in productio
   password. You will quickly want to connect to the OAuth provider (or other authentication scheme)
   of your choice and remove both the bootstrap routine and support for user passwords.
 
-* AG Grid Community Edition (https://www.ag-grid.com/) is added as a client-side dependency, but
-  the licensed AG Grid Enterprise is strongly recommended and required to use all of the available
-  Grid features. Once you have a license, add the missing dependencies (see the Toolbox
-  `package.json`) and configure in your license via the bootstrapped `jsLicenses` app config (or
-  modify `Bootstrap.ts` and include the license with the code, if you have a private repo).
+* AG Grid (https://www.ag-grid.com/) ships with both its Community and Enterprise modules
+  registered in `Bootstrap.ts`. Enterprise is **not optional for a standard Hoist app** - the
+  Admin Console's Cluster Objects, Activity Tracking, and Roles tabs are tree grids, and tree data
+  is an Enterprise-only module.
+
+  Enterprise requires a paid license. Until you add one, grids remain fully functional but render
+  an evaluation watermark and log a console error. Add your key via the bootstrapped `jsLicenses`
+  app config under `agGrid` (Admin Console > Configs), or hard-code it in `Bootstrap.ts` if you
+  are working in a private repo.
 
 ## Development Environment Setup
 

@@ -12,7 +12,7 @@ framework).
 The template intentionally ships a tiny surface: one example tab, one example controller, an
 Auth0 OAuth scaffold (deactivated by default in favor of a bootstrapped local-admin login), and
 the boilerplate config required by Hoist. See **README.md** for the "Important Caveats" (H2
-in-memory DB, password auth, no AG Grid Enterprise license) and the "Next Steps" checklist
+in-memory DB, password auth, unlicensed AG Grid Enterprise) and the "Next Steps" checklist
 (renaming `appCode`, repackaging from `io.xh.app`, swapping in a real database) that every fresh
 clone should run through.
 
@@ -237,7 +237,7 @@ return empty results** for Groovy code. For navigating into Groovy, use Grep/Glo
 
 ## Tech Stack
 
-- **Frontend**: TypeScript, React 19, MobX, AG Grid Community, Highcharts, `@xh/hoist`
+- **Frontend**: TypeScript, React 19, MobX, AG Grid (Community + Enterprise), Highcharts, `@xh/hoist`
 - **Backend**: Grails 7 (Groovy/Spring Boot), `hoist-core`
 - **JDK**: 21 (set via `majorJavaVersion` in `gradle.properties`; the Gradle Java toolchain in
   `build.gradle` reads that value, and the Tomcat base image in `docker/tomcat/Dockerfile` carries
@@ -379,8 +379,9 @@ The README has the authoritative "Next Steps" checklist. Highlights:
 - Replace bootstrap-admin auth with your real auth provider -- the Auth0 scaffold in
   `AuthModel.ts` (client) and `AuthenticationService.groovy` (server) is wired but inactive by
   default.
-- If you'll use AG Grid Enterprise, add `ag-grid-enterprise` to `package.json` and uncomment the
-  enterprise registration block in `Bootstrap.ts`.
+- AG Grid Enterprise is already a dependency and registered in `Bootstrap.ts` -- the Admin
+  Console's tree grids need it. Add your license key to the `jsLicenses` config under `agGrid` to
+  clear the evaluation watermark.
 
 ## Related Repositories
 
