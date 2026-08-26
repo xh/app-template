@@ -39,7 +39,7 @@ export class AppModel extends HoistAppModel {
             ]
         });
 
-        await this.loadAsync();
+        await this.loadAsync(ctx);
     }
 
     override async doLoadAsync(loadSpec: LoadSpec) {
