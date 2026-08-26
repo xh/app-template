@@ -30,7 +30,7 @@
     ]
   },
   "dependencies": {
-    "@xh/hoist": "next",
+    "@xh/hoist": "~87.0.0",
     "ag-grid-community": "~35.3.1",
     "ag-grid-react": "~35.3.1",
     "core-js": "~3.50.0",

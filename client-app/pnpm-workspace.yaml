@@ -23,8 +23,8 @@ publicHoistPattern:
     - webpack-dev-server
 
 # pnpm's minimum-release-age gate refuses freshly published versions as supply-chain protection.
-# Exempt XH's own packages - hoist-react and hoist-dev-utils SNAPSHOTs are routinely consumed
-# minutes after publish.
+# Exempt XH's own packages - hoist-react and hoist-dev-utils releases and SNAPSHOTs are routinely
+# consumed minutes after publish.
 minimumReleaseAgeExclude:
     - '@xh/*'
 
