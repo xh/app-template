@@ -6,13 +6,18 @@
   "scripts": {
     "build": "webpack --env prodBuild",
     "buildAndAnalyze": "webpack --env prodBuild --env analyzeBundles",
-    "lint": "yarn lint:all",
-    "lint:all": "yarn lint:code && yarn lint:styles",
+    "hoistVer": "cat node_modules/@xh/hoist/package.json | grep version",
+    "lint": "pnpm lint:all",
+    "lint:all": "pnpm lint:code && pnpm lint:styles",
     "lint:code": "eslint .",
     "lint:styles": "stylelint \"**/*.s?(a|c)ss\"",
+    "typecheck": "tsc --noEmit",
     "prepare": "cd .. && husky client-app/.husky",
-    "start": "yarn install && cross-env NODE_OPTIONS=--max_old_space_size=3072 webpack-dev-server",
-    "startAndAnalyze": "yarn start --env analyzeBundles"
+    "start": "pnpm install && cross-env NODE_OPTIONS=--max_old_space_size=3072 webpack-dev-server",
+    "startAndAnalyze": "pnpm start --env analyzeBundles",
+    "startWithIp": "pnpm start --env devHost=$(ipconfig getifaddr en0)",
+    "startWithHoist": "(cd ../../hoist-react && pnpm install) && pnpm install && cross-env NODE_OPTIONS=--max_old_space_size=3072 webpack-dev-server --env inlineHoist",
+    "startWithHoistAndAnalyze": "pnpm startWithHoist --env analyzeBundles"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -25,36 +30,32 @@
     ]
   },
   "dependencies": {
-    "@ag-grid-community/client-side-row-model": "~31.2.0",
-    "@ag-grid-community/core": "~31.2.0",
-    "@ag-grid-community/react": "~31.2.0",
-    "@ag-grid-community/styles": "~31.2.0",
-    "@types/react": "18.x",
-    "@xh/hoist": "~73.0.1",
-    "core-js": "3.x",
-    "highcharts": "11.x",
-    "lodash": "4.x",
-    "moment": "2.x",
-    "react": "~18.2.0",
-    "react-dom": "~18.2.0"
+    "@xh/hoist": "~87.0.0",
+    "ag-grid-community": "~35.3.1",
+    "ag-grid-enterprise": "~35.3.1",
+    "ag-grid-react": "~35.3.1",
+    "core-js": "~3.50.0",
+    "highcharts": "~12.6.0",
+    "lodash": "~4.18.1",
+    "moment": "~2.30.1",
+    "react": "~19.2.8",
+    "react-dom": "~19.2.8"
   },
   "devDependencies": {
-    "@xh/hoist-dev-utils": "11.x",
-    "cross-env": "7.x",
-    "eslint": "9.x",
-    "eslint-config-prettier": "10.x",
-    "husky": "9.x",
-    "lint-staged": "15.x",
-    "postcss": "8.x",
-    "prettier": "3.x",
-    "stylelint": "16.x",
-    "stylelint-config-standard-scss": "15.x",
-    "typescript": "^5.8.3"
+    "@types/lodash": "~4.17.25",
+    "@types/react": "~19.2.18",
+    "@types/react-dom": "~19.2.4",
+    "@xh/hoist-dev-utils": "~14.0.1",
+    "cross-env": "~10.1.0",
+    "eslint": "~10.8.1",
+    "eslint-config-prettier": "~10.1.8",
+    "husky": "~9.1.7",
+    "lint-staged": "~17.3.0",
+    "postcss": "~8.5.26",
+    "prettier": "~3.9.6",
+    "stylelint": "~17.14.1",
+    "stylelint-config-recommended-scss": "~17.0.1",
+    "typescript": "~5.9.3"
   },
-  "resolutions": {
-    "core-js": "3.x",
-    "@types/react": "18.x",
-    "@types/react-dom": "18.x"
-  },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "pnpm@11.21.0+sha512.521705bce689924eac72f5a3587122f362689ef6571e55ba80076fd637c11132ecffada26fad4ea79c485bfddbfd3d5a2a5b05805a77e893de71ec8a6cca3bb1"
 }

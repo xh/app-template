@@ -22,30 +22,40 @@ few default configurations that would *not* be suitable for running in productio
   password. You will quickly want to connect to the OAuth provider (or other authentication scheme)
   of your choice and remove both the bootstrap routine and support for user passwords.
 
-* AG Grid Community Edition (https://www.ag-grid.com/) is added as a client-side dependency, but
-  the licensed AG Grid Enterprise is strongly recommended and required to use all of the available
-  Grid features. Once you have a license, add the missing dependencies (see the Toolbox
-  `package.json`) and configure in your license via the bootstrapped `jsLicenses` app config (or
-  modify `Bootstrap.ts` and include the license with the code, if you have a private repo).
+* AG Grid (https://www.ag-grid.com/) ships with both its Community and Enterprise modules
+  registered in `Bootstrap.ts`. Enterprise is **not optional for a standard Hoist app** - the
+  Admin Console's Cluster Objects, Activity Tracking, and Roles tabs are tree grids, and tree data
+  is an Enterprise-only module.
+
+  Enterprise requires a paid license. Until you add one, grids remain fully functional but render
+  an evaluation watermark and log a console error. Add your key via the bootstrapped `jsLicenses`
+  app config under `agGrid` (Admin Console > Configs), or hard-code it in `Bootstrap.ts` if you
+  are working in a private repo.
 
 ## Development Environment Setup
 
 The only local prerequisites for running this template are:
 
-* **Java JDK 17** - with `java` on your system PATH or `JAVA_HOME` set to the JDK install location.
+* **Java JDK 21** - with `java` on your system PATH or `JAVA_HOME` set to the JDK install location.
     * Many IDEs offer a built-in way to manage JDKs and run projects under a particular JDK. If you
       are using IntelliJ, you can set the JDK in the project settings (File > Project Structure)
       and then run the app from the IDE. In that case, we recommend the JetBrains (JBR) distro.
     * Windows users can also install an [OpenJDK distro from Microsoft](https://www.ag-grid.com/),
       as just one option, or download and unpack a zipped JDK without an install routine and add it
       to your `PATH` or set `JAVA_HOME` (no admin rights required).
-    * Mac users can use [Homebrew](https://brew.sh/) to install with `brew install openjdk@17`, or
+    * Mac users can use [Homebrew](https://brew.sh/) to install with `brew install openjdk@21`, or
       use SDKMan (https://sdkman.io/) for a more general-purpose JDK manager.
     * Validate by running `java -version` in a terminal.
-* **Node LTS or newer + Yarn 1.x**
+* **Node 22.15 or newer + pnpm**
     * Install Node from [nodejs.org](https://nodejs.org/en/download/) or via a package manager.
-    * Install Yarn via `npm install -g yarn` or via a package manager.
-    * Validate by running `node -v` and `yarn -v` in a terminal.
+      `client-app/.nvmrc` tracks `lts/*`, so `nvm use` picks a suitable version.
+    * pnpm is the package manager, pinned via the `packageManager` field in
+      `client-app/package.json`. Enable Corepack once with `corepack enable pnpm` and it will
+      install the pinned version on first use.
+    * Validate by running `node -v` and `pnpm -v` in a terminal.
+* **A Font Awesome Pro token** - hoist-react depends on the `@fortawesome/*` Pro packages.
+  `client-app/.npmrc` points at the Pro registry but deliberately carries no credential. Add
+  `//npm.fontawesome.com/:_authToken=<your-token>` to your `~/.npmrc` before installing.
 
 ## Running the Template
 
@@ -77,9 +87,9 @@ to confirm that the server has started, then leave running in that terminal and 
 From there, run:
 
 ```
-cd cient-app
-yarn install
-yarn start
+cd client-app
+pnpm install
+pnpm start
 ```
 
 to install the client-side dependencies and start the client application via WebPack dev server.

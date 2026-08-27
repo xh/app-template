@@ -23,29 +23,44 @@ declare module '@xh/hoist/core' {
 
 //-----------------------------------------------------------------
 // AG Grid Registration
-// You must provide and install a suitable Enterprise license if importing and activating any enterprise features.
 //-----------------------------------------------------------------
 import {installAgGrid} from '@xh/hoist/kit/ag-grid';
-import {ModuleRegistry} from '@ag-grid-community/core';
-import '@ag-grid-community/styles/ag-grid.css';
-import '@ag-grid-community/styles/ag-theme-balham.css';
-import {AgGridReact} from '@ag-grid-community/react';
-import {ClientSideRowModelModule} from '@ag-grid-community/client-side-row-model';
+import {XH} from '@xh/hoist/core';
+import {when} from '@xh/hoist/mobx';
+import {
+    AllCommunityModule,
+    ClientSideRowModelModule,
+    ModuleRegistry,
+    provideGlobalGridOptions
+} from 'ag-grid-community';
+import {AllEnterpriseModule, LicenseManager} from 'ag-grid-enterprise';
+import {AgGridReact} from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-balham.css';
 
-// Register additional modules, if any, including Enterprise features if so licensed.
-ModuleRegistry.registerModules([ClientSideRowModelModule]);
+// Register the full community and enterprise module sets. Curating a module-by-module list saves
+// little in shipped code, and a missing module fails silently at runtime rather than erroring -
+// e.g. the enterprise TreeDataModule, which the Hoist Admin Console requires for the tree grids on
+// its Cluster Objects, Activity Tracking, and Roles tabs, and the community RowDragModule, which
+// the grid column chooser needs for drag-and-drop reordering.
+ModuleRegistry.registerModules([AllCommunityModule, AllEnterpriseModule]);
 
-installAgGrid(AgGridReact, ClientSideRowModelModule.version);
+// Opt in to the legacy CSS-variable theme system Hoist styles target. Required for AG Grid v33+.
+provideGlobalGridOptions({theme: 'legacy'});
 
-// Pattern below is used to register enterprise license from config, if you do not wish to commit your license
-// key directly to the source code.
-// when(
-//     () => XH.appIsRunning,
-//     () => {
-//         const agLicense = XH.getConf('jsLicenses').agGrid;
-//         if (agLicense) LicenseManager.setLicenseKey(agLicense);
-//     }
-// );
+installAgGrid(AgGridReact as any, ClientSideRowModelModule.version);
+
+// AG Grid Enterprise requires a paid license. Hoist itself needs it for the Admin Console tree
+// grids above, so the dependency is not optional for a standard app. Put your key in the
+// `jsLicenses` config (Admin Console > Configs) under `agGrid`. Without one, grids stay fully
+// functional but render an evaluation watermark and log a console error.
+when(
+    () => XH.appIsRunning,
+    () => {
+        const agLicense = XH.getConf('jsLicenses')?.agGrid;
+        if (agLicense) LicenseManager.setLicenseKey(agLicense);
+    }
+);
 
 //-------------------------------------------------------------------------------
 // Highcharts Registration
@@ -53,17 +68,18 @@ installAgGrid(AgGridReact, ClientSideRowModelModule.version);
 //-------------------------------------------------------------------------------
 import {installHighcharts} from '@xh/hoist/kit/highcharts';
 import Highcharts from 'highcharts/highstock';
-import highchartsExportData from 'highcharts/modules/export-data';
-import highchartsExporting from 'highcharts/modules/exporting';
-import highchartsHeatmap from 'highcharts/modules/heatmap';
-import highchartsOfflineExporting from 'highcharts/modules/offline-exporting';
-import highchartsTree from 'highcharts/modules/treemap';
-import highchartsTreeGraph from 'highcharts/modules/treegraph';
 
-highchartsExportData(Highcharts);
-highchartsExporting(Highcharts);
-highchartsHeatmap(Highcharts);
-highchartsOfflineExporting(Highcharts);
-highchartsTree(Highcharts);
-highchartsTreeGraph(Highcharts);
+// Check https://api.highcharts.com/highcharts/ for modules that require other base modules and
+// import in order.
+import 'highcharts/modules/exporting';
+import 'highcharts/modules/heatmap';
+import 'highcharts/modules/treemap';
+
+// `treegraph` must be imported after `treemap`
+import 'highcharts/modules/treegraph';
+
+// `export-data` + `offline-exporting` must be imported after `exporting`
+import 'highcharts/modules/export-data';
+import 'highcharts/modules/offline-exporting';
+
 installHighcharts(Highcharts);

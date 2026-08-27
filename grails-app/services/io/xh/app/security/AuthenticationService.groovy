@@ -4,8 +4,8 @@ import grails.compiler.GrailsCompileStatic
 import grails.gorm.transactions.ReadOnly
 import io.xh.hoist.security.BaseAuthenticationService
 
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 import static io.xh.hoist.util.InstanceConfigUtils.getInstanceConfig
 

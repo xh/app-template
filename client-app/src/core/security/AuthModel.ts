@@ -1,4 +1,11 @@
-import {HoistAuthModel, managed, PlainObject, XH} from '@xh/hoist/core';
+import {
+    CallContextLike,
+    HoistAuthModel,
+    IdentityInfo,
+    managed,
+    PlainObject,
+    XH
+} from '@xh/hoist/core';
 import {AuthZeroClient, AuthZeroClientConfig} from '@xh/hoist/security/authzero';
 
 /**
@@ -9,17 +16,17 @@ export class AuthModel extends HoistAuthModel {
     @managed
     client: AuthZeroClient;
 
-    override async completeAuthAsync(): Promise<boolean> {
+    override async completeAuthAsync(ctx?: CallContextLike): Promise<IdentityInfo> {
         this.setMaskMsg('Authenticating...');
 
-        const config: PlainObject = await this.loadConfigAsync();
+        const config: PlainObject = await this.loadConfigAsync(ctx);
 
         // If OAuth is disabled (the non-standard case), we enable forms-based login by mutating
         // the appSpec, then return the result of the server-based auth check - will be false if
         // the user does not have a session, triggering the Hoist login form.
         if (!config.useOAuth) {
             XH.appSpec.enableLoginForm = true;
-            const ret = await this.getAuthStatusFromServerAsync();
+            const ret = await this.getAuthStatusFromServerAsync(ctx);
             this.setMaskMsg(null);
             return ret;
         }
@@ -35,13 +42,13 @@ export class AuthModel extends HoistAuthModel {
             return idToken ? {Authorization: `Bearer ${idToken.value}`} : null;
         });
 
-        const ret = await this.getAuthStatusFromServerAsync();
+        const ret = await this.getAuthStatusFromServerAsync(ctx);
         this.setMaskMsg(null);
         return ret;
     }
 
-    override async logoutAsync() {
-        await super.logoutAsync();
+    override async logoutAsync(ctx?: CallContextLike) {
+        await super.logoutAsync(ctx);
         await this.client?.logoutAsync();
     }
 
