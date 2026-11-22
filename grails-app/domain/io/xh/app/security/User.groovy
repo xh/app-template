@@ -1,12 +1,12 @@
 package io.xh.app.security
 
+import io.xh.hoist.security.HoistPasswordEncryptor
 import io.xh.hoist.user.HoistUser
-import org.jasypt.util.password.BasicPasswordEncryptor
 
 
 class User implements HoistUser {
 
-    private static encryptor = new BasicPasswordEncryptor()
+    private static encryptor = new HoistPasswordEncryptor()
 
     /** Email as username */
     String email
@@ -24,7 +24,7 @@ class User implements HoistUser {
 
     static constraints = {
         email blank: false, unique: true, email: true, validator: {
-            return validateUsername(it) ?: 'Invalid username - must be all lowercase and without spaces'
+            return User.validateUsername(it) ?: 'Invalid username - must be all lowercase and without spaces'
         }
         name blank: false
         password nullable: true
