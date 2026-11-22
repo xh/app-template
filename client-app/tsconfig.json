@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
     "jsx": "react",
     "lib": ["dom", "es2022"],
     "module": "ES2022",
     "moduleResolution": "bundler",
     "noEmit": true,
     "noImplicitOverride": true,
+    // TypeScript 6+ rejects `import './Foo.scss'` by default. Hoist code imports its styles this way.
+    "noUncheckedSideEffectImports": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
+    // TypeScript 6+ defaults to strict mode, which Hoist and Hoist apps are not written for.
+    "strict": false,
     "target": "ES2022",
     "useDefineForClassFields": true
   },

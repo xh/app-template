@@ -3,24 +3,30 @@
 
 # Dependency build scripts do not run unless reviewed here; unreviewed scripts are a hard error
 # in CI. esbuild is allowed so its platform binary install is guaranteed for build tooling. The
-# rest are declined: browser-tabs-lock (via auth0-spa-js) ships prebuilt dist, and core-js's
+# rest are declined: @parcel/watcher (via sass) ships prebuilt binaries, browser-tabs-lock (via auth0-spa-js) ships prebuilt dist, and core-js's
 # postinstall only prints a funding message.
 allowBuilds:
+    '@parcel/watcher': false
     browser-tabs-lock: false
     core-js: false
     esbuild: true
 
-# The webpack toolchain is owned by @xh/hoist-dev-utils, which depends on webpack, webpack-cli
-# and webpack-dev-server and drives them from its `configureWebpack` export. Our `build` / `start`
-# scripts invoke those CLIs by name, but pnpm only links bins for direct dependencies - so hoist
-# them into the app's node_modules to put `webpack` and `webpack-dev-server` on the script PATH.
-# Preferred over re-declaring them as direct devDependencies of the app: that would fork the
-# version from whatever dev-utils resolves, silently yielding two webpack copies (the CLI's and
-# the one dev-utils loads its plugins against) on any future dev-utils bump.
+# The build toolchain is owned by @xh/hoist-dev-utils, which depends on @rsbuild/core and drives it
+# from its `configureRsbuild` export. Our `build` / `start` scripts invoke the `rsbuild` CLI by
+# name, but pnpm only links bins for direct dependencies - so hoist it into the app's node_modules to
+# put `rsbuild` on the script PATH. Preferred over re-declaring it as a direct devDependency of the
+# app: that would fork the version from whatever dev-utils resolves, silently yielding two Rsbuild
+# copies (the CLI's and the one dev-utils loads its plugins against) on any future dev-utils bump.
 publicHoistPattern:
-    - webpack
-    - webpack-cli
-    - webpack-dev-server
+    - '@rsbuild/core'
+
+# Keep pnpm-lock.yaml a single YAML document. By default pnpm 12 records the pinned pnpm version in
+# a leading lockfile document, and GitHub's dependency graph reads only that first document - so it
+# sees none of our real deps and Dependabot raises no security alerts. With `ignore`, pnpm runs
+# whatever version is installed rather than switching to the `packageManager` pin. Remove once
+# GitHub parses multi-document lockfiles - see
+# https://github.com/dependabot/dependabot-core/issues/15904.
+pmOnFail: ignore
 
 # pnpm's minimum-release-age gate refuses freshly published versions as supply-chain protection.
 # Exempt XH's own packages - hoist-react and hoist-dev-utils releases and SNAPSHOTs are routinely
@@ -39,15 +45,24 @@ minimumReleaseAgeExclude:
 #     `pnpm install --frozen-lockfile` rejects (ERR_PNPM_OUTDATED_LOCKFILE). It only shows up in
 #     CI - a local install with node_modules present skips the check and says "Already up to date".
 catalog:
-    core-js: ~3.50.0
+    core-js: ~3.51.0
 
 overrides:
     core-js: 'catalog:'
+    # Rspack 2.3.2 and 2.3.3 have SWC minifier bugs that break production builds. 2.3.2 breaks
+    # classes that reference themselves in a static initializer. 2.3.3 leaves Highcharts charts
+    # blank. Rsbuild's own range would otherwise resolve a broken version, so pin it here. Remove
+    # once a fixed Rspack ships - see https://github.com/web-infra-dev/rspack/issues/16695.
+    '@rspack/core': 2.3.1
 
 # Several transitive deps (react-popper, react-onsenui, react-windowed-select) still declare
-# react/react-dom peer ranges capped at 18. The app runs React 19 per hoist-react v87 - acknowledge
+# react/react-dom peer ranges capped at 18. The app runs React 19 - acknowledge
 # that here rather than surfacing unmet-peer warnings on every install.
+#
+# Vitest's mocker declares an msw 2 peer, but only Vitest's browser mode uses it there. Unit tests
+# run on msw 3, as hoist-react's test kit requires.
 peerDependencyRules:
     allowedVersions:
         react: '19'
         react-dom: '19'
+        '@vitest/mocker>msw': '3'

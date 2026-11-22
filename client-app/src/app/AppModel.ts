@@ -28,7 +28,7 @@ export class AppModel extends HoistAppModel {
                         placeholder(
                             Icon.home(),
                             p('Welcome home!'),
-                            a({item: 'Now go to work...', onClick: () => this.goToWork()})
+                            a({children: 'Now go to work...', onClick: () => this.goToWork()})
                         )
                 },
                 {

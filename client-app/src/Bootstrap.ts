@@ -27,16 +27,9 @@ declare module '@xh/hoist/core' {
 import {installAgGrid} from '@xh/hoist/kit/ag-grid';
 import {XH} from '@xh/hoist/core';
 import {when} from '@xh/hoist/mobx';
-import {
-    AllCommunityModule,
-    ClientSideRowModelModule,
-    ModuleRegistry,
-    provideGlobalGridOptions
-} from 'ag-grid-community';
+import {AllCommunityModule, ClientSideRowModelModule, ModuleRegistry} from 'ag-grid-community';
 import {AllEnterpriseModule, LicenseManager} from 'ag-grid-enterprise';
 import {AgGridReact} from 'ag-grid-react';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-balham.css';
 
 // Register the full community and enterprise module sets. Curating a module-by-module list saves
 // little in shipped code, and a missing module fails silently at runtime rather than erroring -
@@ -44,9 +37,6 @@ import 'ag-grid-community/styles/ag-theme-balham.css';
 // its Cluster Objects, Activity Tracking, and Roles tabs, and the community RowDragModule, which
 // the grid column chooser needs for drag-and-drop reordering.
 ModuleRegistry.registerModules([AllCommunityModule, AllEnterpriseModule]);
-
-// Opt in to the legacy CSS-variable theme system Hoist styles target. Required for AG Grid v33+.
-provideGlobalGridOptions({theme: 'legacy'});
 
 installAgGrid(AgGridReact as any, ClientSideRowModelModule.version);
 
