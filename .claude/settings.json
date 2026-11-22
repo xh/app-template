@@ -9,14 +9,12 @@
       "WebFetch",
       "WebSearch",
       "Write",
-      "mcp__hoist-core__*",
-      "mcp__hoist-react__*",
+      "mcp__hoist-docs__*",
       "mcp__ide__getDiagnostics"
     ]
   },
   "enabledMcpjsonServers": [
-    "hoist-core",
-    "hoist-react"
+    "hoist-docs"
   ],
   "enabledPlugins": {
     "xh@hoist-ai": true,

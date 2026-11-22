@@ -14,7 +14,7 @@ few default configurations that would *not* be suitable for running in productio
   persisted. You will quickly wish to connect to a real database, even for local exploration.
     * You will need to add an appropriate JDBC driver (and should remove the H2 dependency) to
       `build.gradle` and update your `.env` with required connection details.
-    * The template `DBConfig.groovy` includes some MyQSL-based configuration - contact XH for help
+    * The template `DBConfig.groovy` includes some MySQL-based configuration - contact XH for help
       modifying this appropriately for use with another database.
 
 * Code to perform OAuth authentication is included with an Auth0 (https://auth0.com/) client, but
@@ -36,14 +36,14 @@ few default configurations that would *not* be suitable for running in productio
 
 The only local prerequisites for running this template are:
 
-* **Java JDK 21** - with `java` on your system PATH or `JAVA_HOME` set to the JDK install location.
+* **Java JDK 25** - with `java` on your system PATH or `JAVA_HOME` set to the JDK install location.
     * Many IDEs offer a built-in way to manage JDKs and run projects under a particular JDK. If you
       are using IntelliJ, you can set the JDK in the project settings (File > Project Structure)
       and then run the app from the IDE. In that case, we recommend the JetBrains (JBR) distro.
-    * Windows users can also install an [OpenJDK distro from Microsoft](https://www.ag-grid.com/),
+    * Windows users can also install an [OpenJDK distro from Microsoft](https://learn.microsoft.com/en-us/java/openjdk/download),
       as just one option, or download and unpack a zipped JDK without an install routine and add it
       to your `PATH` or set `JAVA_HOME` (no admin rights required).
-    * Mac users can use [Homebrew](https://brew.sh/) to install with `brew install openjdk@21`, or
+    * Mac users can use [Homebrew](https://brew.sh/) to install with `brew install openjdk@25`, or
       use SDKMan (https://sdkman.io/) for a more general-purpose JDK manager.
     * Validate by running `java -version` in a terminal.
 * **Node 22.15 or newer + pnpm**
@@ -92,12 +92,16 @@ pnpm install
 pnpm start
 ```
 
-to install the client-side dependencies and start the client application via WebPack dev server.
+to install the client-side dependencies and start the client application via the Rsbuild dev server.
 Your browser should open automatically to `http://localhost:3000/app` and display a login screen.
 
 As mentioned above, a default local user with password is created by the Bootstrap routine, so you
 can login as `admin@xh.io / admin` and explore the (very minimal) app. Visit
 `http://localhost:3000/admin` to check out the built-in Admin Console.
+
+To run the client unit tests, run `pnpm test` from `client-app`. The sample spec,
+`client-app/src/app/work/WorkModel.spec.ts`, uses Hoist's test kit, which runs Hoist's client
+services against a fake server.
 
 It is typical for developers to run the above via their IDE - e.g. as IntelliJ "Run Configurations"
 or the equivalent in any IDE of your choice.
@@ -106,15 +110,20 @@ or the equivalent in any IDE of your choice.
 
 * Review the important caveats above, as they cover several immediate items you will want to review
   and adjust around the database, auth, and licensed dependencies.
-* Every Hoist app is given an `appCode` - this repo uses the default value of `hoistApp` which you
+* Every Hoist app is given an `appCode` - this repo uses the default value of `hoistapp` which you
   should change. Likewise with `appName`. Look for these codes in:
     * `gradle.properties`
     * `client-app/package.json`
-    * `client-app/webpack.config.js`
+    * `client-app/rsbuild.config.mjs`
+    * `client-app/vitest.config.mts`
 * After changing your `appCode`, you will need to update your `.env` and `.env.template` to replace
   `APP_HOISTAPP_XXX` with `APP_YOURCODE_XXX`. (See `InstanceConfigUtils` in Hoist Core for details.)
 * The server-side classes within `grails-app` and `src` have a default package of `io.xh.app`, which
   you should also change.
+
+* The CI workflow (`.github/workflows/ci.yml`) lints, type-checks, tests, and builds the client, and
+  builds and tests the server, on each PR and push to `main`. Add your Font Awesome Pro token to the
+  repo's Actions secrets as `FONTAWESOME_PACKAGE_TOKEN` so it can install the client.
 
 After that is complete, all that remains is for you to write the rest of the application. Easy! ✨
 
