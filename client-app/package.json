@@ -17,7 +17,8 @@
     "startAndAnalyze": "pnpm start --env analyzeBundles",
     "startWithIp": "pnpm start --env devHost=$(ipconfig getifaddr en0)",
     "startWithHoist": "(cd ../../hoist-react && pnpm install) && pnpm install && cross-env NODE_OPTIONS=--max_old_space_size=3072 webpack-dev-server --env inlineHoist",
-    "startWithHoistAndAnalyze": "pnpm startWithHoist --env analyzeBundles"
+    "startWithHoistAndAnalyze": "pnpm startWithHoist --env analyzeBundles",
+    "changelog": "xh-changelog"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

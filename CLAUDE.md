@@ -268,6 +268,7 @@ pnpm lint:code            # ESLint only
 pnpm lint:styles          # Stylelint only
 pnpm typecheck            # tsc --noEmit (not covered by lint)
 pnpm startWithHoist       # Dev server against a sibling ../hoist-react checkout
+pnpm changelog            # Changelog fragments - see "Changelog" below
 ```
 
 ### Backend (run from project root)
@@ -326,6 +327,33 @@ speak for itself.
 -- a hidden constraint, a subtle invariant, a workaround. Don't explain what well-named code
 already says, and don't reference "this PR" or "the X bug" inside comments (those belong in the
 PR description and rot quickly).
+
+## Changelog
+
+`CHANGELOG.md` holds the app's release notes. The build parses it with hoist-dev-utils, and Hoist's
+`ChangelogService` shows it in-app to users. Write entries for users: what they will notice, in one
+short past-tense sentence each.
+
+New entries never go in `CHANGELOG.md` directly. Each change adds a **fragment**: a markdown file in
+`changelog.d/` at the repo root, named for its branch. A release assembles the fragments into
+`CHANGELOG.md` under the real version number and deletes them. This keeps pull requests from
+conflicting over `CHANGELOG.md`. The `xh-changelog` command from hoist-dev-utils does the work. Run
+it as `pnpm changelog <command>` from `client-app/`.
+
+- `pnpm changelog add feature "<text>"` adds a one-line entry to `changelog.d/<branch>.md`. It finds
+  the section from a short name, such as `feature`, `fix` or `tech`. `pnpm changelog new` creates
+  an empty fragment for a longer entry.
+- A fragment is the body of a release without its `##` heading: `###` sections and bullets.
+- **Sections**: `Breaking Changes`, `New Features`, `Bug Fixes`, `Technical`, `Libraries`, listed in
+  `changelog.d/config.json`. Hoist's `ChangelogDialog` styles these titles.
+- `pnpm changelog check` validates the fragments, and the Changelog workflow runs it on each pull
+  request. `pnpm changelog preview` prints the next release.
+- The top heading of `CHANGELOG.md` is a bare `## v<x.y>-SNAPSHOT - unreleased` for the version in
+  development. Never write entries under it. Snapshot builds show the fragments there in-app.
+- **Releasing**: `pnpm changelog release <version>` writes the new `## v<version> - <date>` block into
+  `CHANGELOG.md` and deletes the fragments. Review and edit the block, then commit it.
+- Start bullets and `###` headings at column 0. A bullet can wrap, with two-space indentation for
+  continuation lines, and can hold sub-bullets indented two spaces. Both render in-app.
 
 ## Architecture
 

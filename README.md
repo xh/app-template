@@ -115,6 +115,8 @@ or the equivalent in any IDE of your choice.
   `APP_HOISTAPP_XXX` with `APP_YOURCODE_XXX`. (See `InstanceConfigUtils` in Hoist Core for details.)
 * The server-side classes within `grails-app` and `src` have a default package of `io.xh.app`, which
   you should also change.
+* `CHANGELOG.md` holds the release notes that the app shows to its users. Add entries as fragments
+  in `changelog.d/`, not in `CHANGELOG.md` itself. See [`changelog.d/README.md`](changelog.d/README.md).
 
 After that is complete, all that remains is for you to write the rest of the application. Easy! ✨
 
