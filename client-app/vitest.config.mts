@@ -9,19 +9,15 @@
  */
 import configureVitest from '@xh/hoist-dev-utils/configureVitest';
 import {createRequire} from 'node:module';
-import {defineConfig, mergeConfig} from 'vitest/config';
+import {defineConfig} from 'vitest/config';
 
 const require = createRequire(import.meta.url),
     pkg = require('./package.json');
 
 export default defineConfig(
-    mergeConfig(
-        configureVitest({
-            appCode: 'hoistapp',
-            appName: 'Hoist App',
-            appVersion: pkg.version
-        }),
-        // In CI, also report failures as GitHub annotations on the PR.
-        {test: {reporters: process.env.CI ? ['default', 'github-actions'] : ['default']}}
-    )
+    configureVitest({
+        appCode: 'hoistapp',
+        appName: 'Hoist App',
+        appVersion: pkg.version
+    })
 );

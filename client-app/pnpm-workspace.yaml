@@ -1,15 +1,13 @@
 # pnpm settings (pnpm 11+ reads these from this file, not from a `pnpm` field in package.json).
 # This is a single-package project - the file exists for settings only, not to define a workspace.
 
-# Dependency build scripts do not run unless reviewed here; unreviewed scripts are a hard error
-# in CI. esbuild is allowed so its platform binary install is guaranteed for build tooling. The
-# rest are declined: @parcel/watcher (via sass) ships prebuilt binaries, browser-tabs-lock (via auth0-spa-js) ships prebuilt dist, and core-js's
-# postinstall only prints a funding message.
+# Dependency build scripts do not run unless reviewed here. Unreviewed scripts are a hard error
+# in CI. These are declined: @parcel/watcher (via sass) ships prebuilt binaries, browser-tabs-lock
+# (via auth0-spa-js) ships prebuilt dist, and core-js's postinstall only prints a funding message.
 allowBuilds:
     '@parcel/watcher': false
     browser-tabs-lock: false
     core-js: false
-    esbuild: true
 
 # The build toolchain is owned by @xh/hoist-dev-utils, which depends on @rsbuild/core and drives it
 # from its `configureRsbuild` export. Our `build` / `start` scripts invoke the `rsbuild` CLI by
@@ -55,9 +53,8 @@ overrides:
     # once a fixed Rspack ships - see https://github.com/web-infra-dev/rspack/issues/16695.
     '@rspack/core': 2.3.1
 
-# Several transitive deps (react-popper, react-onsenui, react-windowed-select) still declare
-# react/react-dom peer ranges capped at 18. The app runs React 19 - acknowledge
-# that here rather than surfacing unmet-peer warnings on every install.
+# react-popper, via Blueprint, still declares react/react-dom peer ranges capped at 18. The app runs
+# React 19 - acknowledge that here rather than surfacing unmet-peer warnings on every install.
 #
 # Vitest's mocker declares an msw 2 peer, but only Vitest's browser mode uses it there. Unit tests
 # run on msw 3, as hoist-react's test kit requires.
