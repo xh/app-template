@@ -22,7 +22,7 @@ export const workTab = hoistCmp.factory({
             height: 400,
             width: 700,
             tbar: tbar(),
-            item: grid(),
+            children: grid(),
             mask: 'onLoad'
         });
     }
@@ -31,7 +31,7 @@ export const workTab = hoistCmp.factory({
 const tbar = hoistCmp.factory<WorkModel>({
     render({model}) {
         return toolbar({
-            items: [
+            children: [
                 span(`Completed ${model.completedCount} / `),
                 gridCountLabel({unit: 'task'}),
                 filler(),
