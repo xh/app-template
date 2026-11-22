@@ -1,0 +1,91 @@
+# CI - Checks the client and the server on PRs and pushes to main. The client job lints,
+# type-checks, runs the unit tests, and builds. The server job compiles and runs the server tests.
+#
+# This workflow does not publish or deploy anything. Add build and deploy workflows for your own
+# infrastructure.
+
+name: CI
+
+on:
+    push:
+        branches: [ "main" ]
+    pull_request:
+        branches: [ "main" ]
+
+# Only the latest commit's result matters - cancel superseded runs for the same PR or branch.
+concurrency:
+    group: ci-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    client:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        defaults:
+            run:
+                working-directory: client-app
+
+        steps:
+        - uses: actions/checkout@v7
+
+        # Installs the pnpm version pinned via the packageManager field in package.json.
+        - name: Setup pnpm
+          uses: pnpm/setup@v3
+          with:
+              working-directory: 'client-app'
+              # `install: false` - this workflow runs its own install step below, after
+              # Font Awesome registry auth, and with --frozen-lockfile.
+              install: false
+              # `node-version-file: false` - actions/setup-node below owns Node.
+              node-version-file: false
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v7
+          with:
+              node-version-file: 'client-app/.nvmrc'
+              cache: 'pnpm'
+              cache-dependency-path: 'client-app/pnpm-lock.yaml'
+
+        # @xh/hoist depends on Font Awesome Pro packages from a private registry.
+        - name: Configure Font Awesome registry auth
+          env:
+              FONTAWESOME_PACKAGE_TOKEN: ${{ secrets.FONTAWESOME_PACKAGE_TOKEN }}
+          run: echo "//npm.fontawesome.com/:_authToken=$FONTAWESOME_PACKAGE_TOKEN" >> .npmrc
+
+        - name: Install dependencies
+          run: pnpm install --frozen-lockfile
+
+        - name: Lint
+          run: pnpm lint
+
+        - name: Type check
+          run: pnpm typecheck
+
+        # On GitHub Actions, Vitest also annotates failures on the PR diff.
+        - name: Unit tests
+          run: pnpm test
+
+        - name: Build
+          run: pnpm build
+
+    server:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+
+        steps:
+        - uses: actions/checkout@v7
+
+        # Keep in sync with `majorJavaVersion` in gradle.properties.
+        - name: Setup Java
+          uses: actions/setup-java@v6
+          with:
+              distribution: 'temurin'
+              java-version: '25'
+
+        - name: Setup Gradle
+          uses: gradle/actions/setup-gradle@v6
+
+        - name: Build and test
+          run: ./gradlew build
